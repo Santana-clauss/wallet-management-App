@@ -31,7 +31,7 @@ class customTextField extends StatelessWidget {
           borderRadius:const BorderRadius.all(Radius.circular(10))),
           prefixIcon: Icon(icon),
           // ignore: sized_box_for_whitespace
-          suffixIcon: isPassword?Icon(Icons.visibility):Container(height: 10,width: 10,)), 
+          suffixIcon: isPassword?Icon(Icons.visibility):Container(height: 8,width: 8,)), 
           obscureText: hideText,
     );
     

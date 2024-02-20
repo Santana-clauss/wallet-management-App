@@ -41,7 +41,8 @@ class _HomepageState extends State<Homepage> {
                         ),
                         customText(
                           label: "Santana",
-                          fontSize: 24,),
+                          fontSize: 24,
+                        ),
                       ],
                     ),
                     Container(
@@ -98,7 +99,9 @@ class _HomepageState extends State<Homepage> {
                 labelColor: Colors.black,
                 fontSize: 20,
               ),
-              SizedBox(height: 25,),
+              SizedBox(
+                height: 25,
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: Row(
@@ -120,7 +123,7 @@ class _HomepageState extends State<Homepage> {
                 ),
               ),
               SizedBox(height: 25),
-              
+
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25),
                 child: Column(
@@ -129,9 +132,11 @@ class _HomepageState extends State<Homepage> {
                         imageUrl: "images/transcations.png",
                         tileTitle: "Transactions",
                         subTileTitle: "Recent Payments"),
-                    SizedBox(height: 20,),
+                    SizedBox(
+                      height: 20,
+                    ),
                     custumdetails(
-                        imageUrl: "images/transcations.png",
+                        imageUrl: "images/report.png",
                         tileTitle: "Reports",
                         subTileTitle: "View reports"),
                   ],

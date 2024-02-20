@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:flutter_app/pages/home.dart';
+import 'package:flutter_app/pages/login.dart';
  // Assuming Homepage is in a separate file
 
 void main() {
@@ -16,7 +16,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Homepage()
+      //home: Homepage()
+      home: LoginScreen()
     );
   }
 }
