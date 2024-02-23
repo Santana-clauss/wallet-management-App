@@ -1,22 +1,18 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:flutter_app/pages/home.dart';
 import 'package:flutter_app/views/customText.dart';
 import 'package:flutter_app/views/customTextField.dart';
+import 'package:get/get.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController firstNameController = TextEditingController();
-    final TextEditingController lastNameController = TextEditingController();
     final TextEditingController emailController = TextEditingController();
     final TextEditingController passwordController = TextEditingController();
-    final TextEditingController phoneNumberController = TextEditingController();
-    final TextEditingController renterPasswordController =
-        TextEditingController();
-
     return Scaffold(
       body: Stack(
         children: [
@@ -38,10 +34,14 @@ class LoginScreen extends StatelessWidget {
             child: Column(
               children: [
                 SizedBox(height: 20),
-                Image.asset(
-                  'images/logow.jpg',
-                  height: 100,
-                  width: 100,
+                Container(
+                  decoration:
+                      BoxDecoration(borderRadius: BorderRadius.circular(30)),
+                  child: Image.asset(
+                    'images/logow.jpg',
+                    height: 100,
+                    width: 100,
+                  ),
                 ),
                 SizedBox(height: 20),
                 customText(
@@ -69,25 +69,10 @@ class LoginScreen extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              customText(label: "First Name"),
-                              customTextField(
-                                userFieldController: firstNameController,
-                                hint: "First Name",
-                              ),
-                              customText(label: "Last Name"),
-                              customTextField(
-                                userFieldController: lastNameController,
-                                hint: "Last Name",
-                              ),
                               customText(label: "Email"),
                               customTextField(
                                 userFieldController: emailController,
                                 hint: "youremail@example.com",
-                              ),
-                              customText(label: "Phone Number"),
-                              customTextField(
-                                userFieldController: phoneNumberController,
-                                hint: "Phone number",
                               ),
                               customText(label: "Password"),
                               customTextField(
@@ -95,18 +80,18 @@ class LoginScreen extends StatelessWidget {
                                 hint: "Password",
                                 hideText: true,
                               ),
-                              customText(label: "Re-enter password"),
-                              customTextField(
-                                userFieldController: renterPasswordController,
-                                hint: "Re-enter password",
-                                hideText: true,
-                              ),
                               SizedBox(height: 20),
                               ElevatedButton(
-                                onPressed: () {},
-                                child: Text("Sign Up"),
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (BuildContext context) =>
+                                              Homepage()));
+                                },
+                                child: Text("Login"),
                                 style: ElevatedButton.styleFrom(
-                                  primary: Colors.green,
+                                  backgroundColor: Colors.green,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20),
                                   ),
@@ -116,20 +101,24 @@ class LoginScreen extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              SizedBox(height: 25,),
+                              SizedBox(
+                                height: 25,
+                              ),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                  customText(label: "Already have an account?"),
-                                  GestureDetector(child: 
-                                  Row(
+                                  customText(label: "Don't have an account?"),
+                                  GestureDetector(
+                                      child: Row(
                                     //mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
-                                      
-                                      customText(label: "Login here",labelColor: Colors.blue,),
+                                      customText(
+                                        label: "Sign up here",
+                                        labelColor: Colors.green,
+                                        onTap: gotoRegister       
+                                      ),
                                     ],
-                                  )
-                                  ),
+                                  )),
                                 ],
                               )
                             ],
@@ -145,5 +134,8 @@ class LoginScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+  void gotoRegister() {
+    Get.offAllNamed("/register");
   }
 }
