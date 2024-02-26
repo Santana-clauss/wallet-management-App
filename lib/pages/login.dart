@@ -6,7 +6,6 @@ import 'package:flutter_app/views/customText.dart';
 import 'package:flutter_app/views/customTextField.dart';
 import 'package:get/get.dart';
 
-
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
@@ -21,41 +20,48 @@ class LoginScreen extends StatelessWidget {
             height: double.infinity,
             width: double.infinity,
             decoration: BoxDecoration(
-              color:appGreenColor
-              // gradient: LinearGradient(
-              //   begin: Alignment.topCenter,
-              //   end: Alignment.bottomCenter,
-              //   colors: [
-              //     const Color(0xFF1B8D1E),
-              //     const Color(0xFF2ECC71),
-              //   ],
-              // ),
-            ),
+                image: DecorationImage(
+                    image: AssetImage("images/background.jpg"),
+                    fit: BoxFit.cover)
+                //color:appGreenColor
+                // gradient: LinearGradient(
+                //   begin: Alignment.topCenter,
+                //   end: Alignment.bottomCenter,
+                //   colors: [
+                //     const Color(0xFF1B8D1E),
+                //     const Color(0xFF2ECC71),
+                //   ],
+                // ),
+                ),
           ),
           SafeArea(
             child: Column(
               children: [
                 SizedBox(height: 20),
-                Container(
-                  decoration:
-                      BoxDecoration(borderRadius: BorderRadius.circular(30)),
-                  child: Image.asset(
-                    'images/logow.jpg',
-                    height: 100,
-                    width: 100,
+                CircleAvatar(
+                    radius: 50, 
+                    backgroundColor: Colors
+                        .transparent, 
+                    child: ClipOval(
+                      child: Image.asset(
+                        'images/logow.jpg',
+                        height: 100,
+                        width: 100,
+                        fit: BoxFit.cover, 
+                      ),
+                    ),
                   ),
-                ),
+                
+                // Container(
+                //   decoration:
+                //       BoxDecoration(borderRadius: BorderRadius.circular(30)),
+                //   child: Image.asset(
+                //     'images/logow.jpg',
+                //     height: 100,
+                //     width: 100,
+                //   ),
+                // ),
                 SizedBox(height: 20),
-                customText(
-                  label: "Hello,",
-                  labelColor: Colors.white,
-                  fontSize: 20,
-                ),
-                customText(
-                  label: "Welcome",
-                  labelColor: Colors.white,
-                  fontSize: 20,
-                ),
                 SizedBox(height: 20),
                 Expanded(
                   child: SingleChildScrollView(
@@ -64,7 +70,7 @@ class LoginScreen extends StatelessWidget {
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(40),
-                          color: Colors.white,
+                          color: Colors.white.withOpacity(0.74),
                         ),
                         child: Padding(
                           padding: const EdgeInsets.all(20),
@@ -85,8 +91,10 @@ class LoginScreen extends StatelessWidget {
                                 hideText: true,
                               ),
                               SizedBox(height: 20),
-                              customButton(buttonLabel: "Login",action:gotoHome,),
-                          
+                              customButton(
+                                buttonLabel: "Login",
+                                action: gotoHome,
+                              ),
                               SizedBox(
                                 height: 25,
                               ),
@@ -99,10 +107,9 @@ class LoginScreen extends StatelessWidget {
                                     //mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
                                       customText(
-                                        label: "Sign up here",
-                                        labelColor: appGreenColor,
-                                        onTap: gotoRegister       
-                                      ),
+                                          label: "Sign up here",
+                                          labelColor: appGreenColor,
+                                          onTap: gotoRegister),
                                     ],
                                   )),
                                 ],
@@ -121,10 +128,12 @@ class LoginScreen extends StatelessWidget {
       ),
     );
   }
+
   void gotoRegister() {
     Get.offAllNamed("/");
   }
-   void gotoHome() {
+
+  void gotoHome() {
     Get.offAllNamed("/home");
   }
 }

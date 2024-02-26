@@ -26,7 +26,10 @@ class RegisterScreen extends StatelessWidget {
           height: MediaQuery.of(context).size.height,
           width: double.infinity,
           decoration: BoxDecoration(
-            color: appGreenColor,
+            image:DecorationImage(image: AssetImage('/images/background.jpg'),
+            fit:BoxFit.cover),
+            
+            //color: appGreenColor,
             // gradient: LinearGradient(
             //   begin: Alignment.topCenter,
             //   end: Alignment.bottomCenter,
@@ -49,17 +52,35 @@ class RegisterScreen extends StatelessWidget {
             ],
           ),
           child: SafeArea(
-            // Add padding to the SafeArea to prevent bottom overflow
+            
             //padding: EdgeInsets.only(bottom: 20),
             child: SingleChildScrollView(
               child: Column(
                 children: [
                   SizedBox(height: 20),
-                  Image.asset(
-                    'images/logow.jpg',
-                    height: 100,
-                    width: 100,
+                  CircleAvatar(
+                    radius: 50, 
+                    backgroundColor: Colors
+                        .transparent, 
+                    child: ClipOval(
+                      child: Image.asset(
+                        'images/logow.jpg',
+                        height: 100,
+                        width: 100,
+                        fit: BoxFit.cover, 
+                      ),
+                    ),
                   ),
+                  // Container(
+                  //   decoration: BoxDecoration(
+                  //     borderRadius: BorderRadius.all(Radius.circular(10))
+                  //   ),
+                  //   child: Image.asset(
+                  //     'images/logow.jpg',
+                  //     height: 100,
+                  //     width: 100,
+                  //   ),
+                  // ),
                   SizedBox(height: 20),
                   customText(
                     label: "Hello,",
@@ -78,7 +99,7 @@ class RegisterScreen extends StatelessWidget {
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
-                        color: Colors.white,
+                        color: Colors.white.withOpacity(0.74)
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(20),

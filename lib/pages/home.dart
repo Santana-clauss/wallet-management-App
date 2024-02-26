@@ -1,13 +1,19 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, sized_box_for_whitespace
 
 import 'package:flutter/material.dart';
 import 'package:flutter_app/config/const.dart';
+import 'package:flutter_app/controllers/controllers.dart';
+import 'package:flutter_app/pages/accounts.dart';
 import 'package:flutter_app/views/customText.dart';
 import 'package:flutter_app/views/customcard.dart';
 import 'package:flutter_app/views/customedetails.dart';
 import 'package:flutter_app/views/customtbutton.dart';
+import 'package:get/get.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+
+HomeController homeController = Get.put(HomeController());
+var screens = [Homepage(), AccountsPage()];
 
 class Homepage extends StatefulWidget {
   Homepage({Key? key}) : super(key: key);
@@ -31,23 +37,32 @@ class _HomepageState extends State<Homepage> {
           ),
           color: Color.fromARGB(255, 88, 86, 86).withOpacity(0.15),
         ),
-        
         child: GNav(
           color: const Color.fromARGB(255, 160, 150, 150),
           activeColor: Colors.green,
           gap: 8,
           tabBackgroundColor: Colors.green.withOpacity(0.1),
-          tabs:
-         [
-        GButton(icon: Icons.home,iconColor: appBlackColor),
-        GButton(icon: Icons.notifications, iconColor: appBlackColor),
-        GButton(icon: Icons.settings, iconColor: appBlackColor),
-        GButton(icon: Icons.person,iconColor: appBlackColor)
-        ]
+          tabs: [
+            GButton(icon: Icons.home, iconColor: appBlackColor,onPressed: (){
+              Navigator.pushNamed(context, '/home');
+
+            },),
+            GButton(icon: Icons.account_box, iconColor: appBlackColor,
+            onPressed: (){
+              Navigator.pushNamed(context, '/accounts');
+            },),
+            GButton(icon: Icons.settings, iconColor: appBlackColor,onPressed: (){
+              Navigator.pushNamed(context, '/accounts');
+            } ,),
+            GButton(icon: Icons.person, iconColor: appBlackColor,
+              onPressed: () {
+                Navigator.pushNamed(context, '/accounts');
+              } ,)
+          ],
           
         ),
       ),
-      body:SafeArea(
+      body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -91,7 +106,7 @@ class _HomepageState extends State<Homepage> {
                     MyWallet(
                       title: "SAVINGS ACCOUNT",
                       balance: 5000,
-                      color: Colors.green, 
+                      color: Colors.green,
                     ),
                     MyWallet(
                       title: "VISA CARD",
@@ -169,11 +184,14 @@ class _HomepageState extends State<Homepage> {
               ),
               SizedBox(
                   height:
-                      50), // Adjusted height to add extra space at the bottom
+                      50), 
             ],
           ),
         ),
       ),
     );
+  }
+  void gotoAccounts() {
+    Get.offAllNamed("/login");
   }
 }
