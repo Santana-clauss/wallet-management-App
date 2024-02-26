@@ -1,7 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:flutter_app/pages/home.dart';
+import 'package:flutter_app/config/const.dart';
+import 'package:flutter_app/views/customButton.dart';
 import 'package:flutter_app/views/customText.dart';
 import 'package:flutter_app/views/customTextField.dart';
 import 'package:get/get.dart';
@@ -25,21 +26,22 @@ class RegisterScreen extends StatelessWidget {
           height: MediaQuery.of(context).size.height,
           width: double.infinity,
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Color(0xFF88AB75), // Adjusted color
-                Color(0xFF53734B), // Adjusted color
-              ],
-            ),
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(40),
-              bottomRight: Radius.circular(40),
-            ),
+            color: appGreenColor,
+            // gradient: LinearGradient(
+            //   begin: Alignment.topCenter,
+            //   end: Alignment.bottomCenter,
+            //   colors: [
+            //     Color(0xFF88AB75), // Adjusted color
+            //     Color(0xFF53734B), // Adjusted color
+            //   ],
+            // ),
+            // borderRadius: BorderRadius.only(
+            //   bottomLeft: Radius.circular(40),
+            //   bottomRight: Radius.circular(40),
+            // ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.2),
+                color: appGreenColor.withOpacity(0.2),
                 spreadRadius: 5,
                 blurRadius: 7,
                 offset: Offset(0, 3),
@@ -63,6 +65,7 @@ class RegisterScreen extends StatelessWidget {
                     label: "Hello,",
                     labelColor: Colors.white,
                     fontSize: 20,
+                    
                   ),
                   customText(
                     label: "Welcome",
@@ -85,71 +88,73 @@ class RegisterScreen extends StatelessWidget {
                             customTextField(
                               userFieldController: firstNameController,
                               hint: "First Name",
+                              icon: Icons.person,
                             ),
                             SizedBox(height: 15),
                             customTextField(
                               userFieldController: lastNameController,
                               hint: "Last Name",
+                              icon: Icons.person,
                             ),
                             SizedBox(height: 15),
                             customTextField(
                               userFieldController: emailController,
                               hint: "youremail@example.com",
+                              icon: Icons.email,
                             ),
                             SizedBox(height: 15),
                             customTextField(
                               userFieldController: phoneNumberController,
                               hint: "Phone number",
+                              icon: Icons.phone,
                             ),
                             SizedBox(height: 15),
                             customTextField(
                               userFieldController: passwordController,
                               hint: "Password",
+                              icon: Icons.lock,
                               hideText: true,
                             ),
                             SizedBox(height: 15),
                             customTextField(
                               userFieldController: renterPasswordController,
                               hint: "Re-enter password",
+                              icon: Icons.lock,
                               hideText: true,
                             ),
                             SizedBox(height: 20),
-                            ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          Homepage()),
-                                );
-                              },
-                              child: Text("Sign Up"),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.green,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 50,
-                                  vertical: 15,
-                                ),
-                              ),
-                            ),
+                            customButton(buttonLabel: "Sign up",action: gotoLogin,),
+                            // ElevatedButton(
+                            //   onPressed: () {
+                            //     Navigator.push(
+                            //       context,
+                            //       MaterialPageRoute(
+                            //           builder: (BuildContext context) =>
+                            //               Homepage()),
+                            //     );
+                            //   },
+                            //   child: Text("Sign Up"),
+                            //   style: ElevatedButton.styleFrom(
+                            //     backgroundColor: Colors.green,
+                            //     shape: RoundedRectangleBorder(
+                            //       borderRadius: BorderRadius.circular(20),
+                            //     ),
+                            //     padding: const EdgeInsets.symmetric(
+                            //       horizontal: 50,
+                            //       vertical: 15,
+                            //     ),
+                            //   ),
+                            // ),
                             SizedBox(height: 25),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                customText(label: "Already have an account?"),
-                                GestureDetector(
-                                  onTap: () {
-                                    // Navigate to login screen
-                                  },
-                                  child: customText(
-                                    label: "Login here",
-                                    labelColor: Colors.green,
-                                    onTap: gotoHome
-                                  ),
-                                ),
+                                customText(label: "Already have an account?",onTap: gotoLogin,),
+                                customText(
+                                      label: "Login here",
+                                      labelColor: appGreenColor,
+                                      onTap: gotoLogin),
+                                
                               ],
                             )
                           ],
@@ -165,7 +170,11 @@ class RegisterScreen extends StatelessWidget {
       ),
     );
   }
-   void gotoHome() {
+
+  void gotoLogin() {
     Get.offAllNamed("/login");
+  }
+  void gotoRegister() {
+    Get.offAllNamed("/");
   }
 }

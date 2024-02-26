@@ -1,10 +1,11 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
-
 import 'package:flutter/material.dart';
-import 'package:flutter_app/pages/home.dart';
+import 'package:flutter_app/config/const.dart';
+import 'package:flutter_app/views/customButton.dart';
 import 'package:flutter_app/views/customText.dart';
 import 'package:flutter_app/views/customTextField.dart';
 import 'package:get/get.dart';
+
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -20,14 +21,15 @@ class LoginScreen extends StatelessWidget {
             height: double.infinity,
             width: double.infinity,
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  const Color(0xFF1B8D1E),
-                  const Color(0xFF2ECC71),
-                ],
-              ),
+              color:appGreenColor
+              // gradient: LinearGradient(
+              //   begin: Alignment.topCenter,
+              //   end: Alignment.bottomCenter,
+              //   colors: [
+              //     const Color(0xFF1B8D1E),
+              //     const Color(0xFF2ECC71),
+              //   ],
+              // ),
             ),
           ),
           SafeArea(
@@ -73,34 +75,18 @@ class LoginScreen extends StatelessWidget {
                               customTextField(
                                 userFieldController: emailController,
                                 hint: "youremail@example.com",
+                                icon: Icons.email,
                               ),
                               customText(label: "Password"),
                               customTextField(
                                 userFieldController: passwordController,
                                 hint: "Password",
+                                icon: Icons.lock,
                                 hideText: true,
                               ),
                               SizedBox(height: 20),
-                              ElevatedButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (BuildContext context) =>
-                                              Homepage()));
-                                },
-                                child: Text("Login"),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.green,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 50,
-                                    vertical: 15,
-                                  ),
-                                ),
-                              ),
+                              customButton(buttonLabel: "Login",action:gotoHome,),
+                          
                               SizedBox(
                                 height: 25,
                               ),
@@ -114,7 +100,7 @@ class LoginScreen extends StatelessWidget {
                                     children: [
                                       customText(
                                         label: "Sign up here",
-                                        labelColor: Colors.green,
+                                        labelColor: appGreenColor,
                                         onTap: gotoRegister       
                                       ),
                                     ],
@@ -136,6 +122,9 @@ class LoginScreen extends StatelessWidget {
     );
   }
   void gotoRegister() {
-    Get.offAllNamed("/register");
+    Get.offAllNamed("/");
+  }
+   void gotoHome() {
+    Get.offAllNamed("/home");
   }
 }
