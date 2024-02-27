@@ -43,23 +43,35 @@ class _HomepageState extends State<Homepage> {
           gap: 8,
           tabBackgroundColor: Colors.green.withOpacity(0.1),
           tabs: [
-            GButton(icon: Icons.home, iconColor: appBlackColor,onPressed: (){
-              Navigator.pushNamed(context, '/home');
-
-            },),
-            GButton(icon: Icons.account_box, iconColor: appBlackColor,
-            onPressed: (){
-              Navigator.pushNamed(context, '/accounts');
-            },),
-            GButton(icon: Icons.settings, iconColor: appBlackColor,onPressed: (){
-              Navigator.pushNamed(context, '/accounts');
-            } ,),
-            GButton(icon: Icons.person, iconColor: appBlackColor,
+            GButton(
+              icon: Icons.home,
+              iconColor: appBlackColor,
+              onPressed: () {
+                Navigator.pushNamed(context, '/home');
+              },
+            ),
+            GButton(
+              icon: Icons.account_box,
+              iconColor: appBlackColor,
               onPressed: () {
                 Navigator.pushNamed(context, '/accounts');
-              } ,)
+              },
+            ),
+            GButton(
+              icon: Icons.settings,
+              iconColor: appBlackColor,
+              onPressed: () {
+                Navigator.pushNamed(context, '/accounts');
+              },
+            ),
+            GButton(
+              icon: Icons.person,
+              iconColor: appBlackColor,
+              onPressed: () {
+                Navigator.pushNamed(context, '/accounts');
+              },
+            )
           ],
-          
         ),
       ),
       body: SafeArea(
@@ -147,23 +159,32 @@ class _HomepageState extends State<Homepage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    MyButton(
-                      iconImagePath: "images/deposit.png",
-                      buttonText: "Bills",
+                    GestureDetector(
+                      onTap: (){
+                        //Navigator.pushNamed(context, '/accounts');
+                      },
+                      child: MyButton(
+                        iconImagePath: "images/deposit.png",
+                        buttonText: "Bills",
+                      ),
                     ),
-                    MyButton(
-                      iconImagePath: "images/withdraw.png",
-                      buttonText: "Withdraw",
+                    //MyButton(iconImagePath: iconImagePath, buttonText: buttonText)
+                    GestureDetector(
+                      child: MyButton(
+                        iconImagePath: "images/withdraw.png",
+                        buttonText: "Withdraw",
+                      ),
                     ),
-                    MyButton(
-                      iconImagePath: "images/send.png",
-                      buttonText: "Transfer",
+                    GestureDetector(
+                      child: MyButton(
+                        iconImagePath: "images/send.png",
+                        buttonText: "Transfer",
+                      ),
                     ),
                   ],
                 ),
               ),
               SizedBox(height: 25),
-
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25),
                 child: Column(
@@ -182,15 +203,14 @@ class _HomepageState extends State<Homepage> {
                   ],
                 ),
               ),
-              SizedBox(
-                  height:
-                      50), 
+              SizedBox(height: 50),
             ],
           ),
         ),
       ),
     );
   }
+
   void gotoAccounts() {
     Get.offAllNamed("/login");
   }

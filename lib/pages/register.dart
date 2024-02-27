@@ -28,20 +28,6 @@ class RegisterScreen extends StatelessWidget {
           decoration: BoxDecoration(
             image:DecorationImage(image: AssetImage('/images/background.jpg'),
             fit:BoxFit.cover),
-            
-            //color: appGreenColor,
-            // gradient: LinearGradient(
-            //   begin: Alignment.topCenter,
-            //   end: Alignment.bottomCenter,
-            //   colors: [
-            //     Color(0xFF88AB75), // Adjusted color
-            //     Color(0xFF53734B), // Adjusted color
-            //   ],
-            // ),
-            // borderRadius: BorderRadius.only(
-            //   bottomLeft: Radius.circular(40),
-            //   bottomRight: Radius.circular(40),
-            // ),
             boxShadow: [
               BoxShadow(
                 color: appGreenColor.withOpacity(0.2),
@@ -71,16 +57,7 @@ class RegisterScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  // Container(
-                  //   decoration: BoxDecoration(
-                  //     borderRadius: BorderRadius.all(Radius.circular(10))
-                  //   ),
-                  //   child: Image.asset(
-                  //     'images/logow.jpg',
-                  //     height: 100,
-                  //     width: 100,
-                  //   ),
-                  // ),
+                
                   SizedBox(height: 20),
                   customText(
                     label: "Hello,",
