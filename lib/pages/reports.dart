@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-// ignore: depend_on_referenced_packages
 import 'package:charts_flutter/flutter.dart' as charts;
 
 class ReportsPage extends StatefulWidget {
@@ -12,20 +11,23 @@ class _ReportsPageState extends State<ReportsPage> {
   double totalBalance = 5000.0;
   List<Transaction> transactions = [
     Transaction(
-        date: DateTime.now(),
-        amount: -50.0,
-        category: 'Food',
-        description: 'Groceries'),
+      date: DateTime.now(),
+      amount: -50.0,
+      category: 'Food',
+      description: 'Groceries',
+    ),
     Transaction(
-        date: DateTime.now().subtract(Duration(days: 2)),
-        amount: -20.0,
-        category: 'Entertainment',
-        description: 'Movie Tickets'),
+      date: DateTime.now().subtract(Duration(days: 2)),
+      amount: -20.0,
+      category: 'Entertainment',
+      description: 'Movie Tickets',
+    ),
     Transaction(
-        date: DateTime.now().subtract(Duration(days: 5)),
-        amount: -100.0,
-        category: 'Bills',
-        description: 'Electricity Bill'),
+      date: DateTime.now().subtract(Duration(days: 5)),
+      amount: -100.0,
+      category: 'Bills',
+      description: 'Electricity Bill',
+    ),
     // Add more sample transactions here
   ];
 
@@ -36,7 +38,7 @@ class _ReportsPageState extends State<ReportsPage> {
   String? selectedTransactionType;
 
   // Chart data
-  List<charts.Series<Transaction, String>> _chartData = [];
+  late List<charts.Series<Transaction, String>> _chartData;
 
   @override
   void initState() {
@@ -48,8 +50,8 @@ class _ReportsPageState extends State<ReportsPage> {
     _chartData = [
       charts.Series<Transaction, String>(
         id: 'Expenses',
-        domainFn: (Transaction transaction, _) => transaction.category,
-        measureFn: (Transaction transaction, _) => transaction.amount.abs(),
+        domainFn: (transaction, _) => transaction.category,
+        measureFn: (transaction, _) => transaction.amount.abs(),
         data: transactions,
       ),
     ];
@@ -127,7 +129,7 @@ class _ReportsPageState extends State<ReportsPage> {
                   selectedAccount = value;
                 });
               },
-              items: ['All', 'Savings', 'Checking', 'Credit Card']
+              items: ['All', 'Savings', 'KCB Card', 'Visa Card']
                   .map((account) => DropdownMenuItem(
                         value: account,
                         child: Text(account),
@@ -146,7 +148,7 @@ class _ReportsPageState extends State<ReportsPage> {
                   selectedTransactionType = value;
                 });
               },
-              items: ['All', 'Debit', 'Credit']
+              items: ['Withdrawals', 'Bills', 'Sent']
                   .map((type) => DropdownMenuItem(
                         value: type,
                         child: Text(type),

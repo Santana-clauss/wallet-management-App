@@ -58,15 +58,15 @@ class RegisterScreen extends StatelessWidget {
                     ),
                   ),
                 
-                  SizedBox(height: 20),
+                  SizedBox(height: 25),
                   customText(
-                    label: "Hello,",
-                    labelColor: Colors.white,
+                    label: "Your Mobile wallet",
+                    labelColor: Colors.green.shade900,
                     fontSize: 20,
                     
                   ),
                   customText(
-                    label: "Welcome",
+                    label: "Your Way",
                     labelColor: Colors.white,
                     fontSize: 20,
                   ),

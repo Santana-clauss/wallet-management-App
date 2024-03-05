@@ -1,18 +1,24 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 import 'package:flutter/material.dart';
 import 'package:flutter_app/config/const.dart';
+import 'package:flutter_app/utils/preferences.dart';
 import 'package:flutter_app/views/customButton.dart';
 import 'package:flutter_app/views/customText.dart';
 import 'package:flutter_app/views/customTextField.dart';
 import 'package:get/get.dart';
 
+final TextEditingController userNameController = TextEditingController();
+final TextEditingController passwordController = TextEditingController();
+preferences myPref=preferences();
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController emailController = TextEditingController();
-    final TextEditingController passwordController = TextEditingController();
+    myPref.getValue("username").then((value) => {
+      userNameController.text=value
+    });
+  
     return Scaffold(
       body: Stack(
         children: [
@@ -23,15 +29,8 @@ class LoginScreen extends StatelessWidget {
                 image: DecorationImage(
                     image: AssetImage("images/background.jpg"),
                     fit: BoxFit.cover)
-                //color:appGreenColor
-                // gradient: LinearGradient(
-                //   begin: Alignment.topCenter,
-                //   end: Alignment.bottomCenter,
-                //   colors: [
-                //     const Color(0xFF1B8D1E),
-                //     const Color(0xFF2ECC71),
-                //   ],
-                // ),
+        
+               
                 ),
           ),
           SafeArea(
@@ -51,16 +50,6 @@ class LoginScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                
-                // Container(
-                //   decoration:
-                //       BoxDecoration(borderRadius: BorderRadius.circular(30)),
-                //   child: Image.asset(
-                //     'images/logow.jpg',
-                //     height: 100,
-                //     width: 100,
-                //   ),
-                // ),
                 SizedBox(height: 20),
                 SizedBox(height: 20),
                 Expanded(
@@ -77,10 +66,10 @@ class LoginScreen extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              customText(label: "Email"),
+                              customText(label: "username"),
                               customTextField(
-                                userFieldController: emailController,
-                                hint: "youremail@example.com",
+                                userFieldController: userNameController,
+                                //hint: "youremail@example.com",
                                 icon: Icons.email,
                               ),
                               customText(label: "Password"),
@@ -134,6 +123,7 @@ class LoginScreen extends StatelessWidget {
   }
 
   void gotoHome() {
+    myPref.setValue("username", userNameController.text);
     Get.offAllNamed("/home");
   }
 }

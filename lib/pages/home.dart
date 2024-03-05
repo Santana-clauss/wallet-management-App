@@ -58,17 +58,17 @@ class _HomepageState extends State<Homepage> {
               },
             ),
             GButton(
-              icon: Icons.settings,
+              icon: Icons.report,
               iconColor: appBlackColor,
               onPressed: () {
-                Navigator.pushNamed(context, '/accounts');
+                Navigator.pushNamed(context, '/reports');
               },
             ),
             GButton(
               icon: Icons.person,
               iconColor: appBlackColor,
               onPressed: () {
-                Navigator.pushNamed(context, '/accounts');
+                Navigator.pushNamed(context, '/profile');
               },
             )
           ],

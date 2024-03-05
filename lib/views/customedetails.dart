@@ -49,7 +49,7 @@ class custumdetails extends StatelessWidget {
             ),
           ],
         ),
-        Icon(Icons.arrow_forward),
+        Icon(Icons.arrow_forward_ios),
       ],
     );
   }
