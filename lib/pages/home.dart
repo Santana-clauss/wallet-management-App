@@ -1,9 +1,11 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, sized_box_for_whitespace
+// ignore_for_file: prefer_const_constructors, sized_box_for_whitespace, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
 import 'package:flutter_app/config/const.dart';
 import 'package:flutter_app/controllers/controllers.dart';
 import 'package:flutter_app/pages/accounts.dart';
+import 'package:flutter_app/pages/profile.dart';
+import 'package:flutter_app/pages/reports.dart';
 import 'package:flutter_app/views/customText.dart';
 import 'package:flutter_app/views/customcard.dart';
 import 'package:flutter_app/views/customedetails.dart';
@@ -13,7 +15,12 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 HomeController homeController = Get.put(HomeController());
-var screens = [Homepage(), AccountsPage()];
+var screens = [
+  Homepage(),
+  AccountsPage(),
+  ProfilePage(),
+  ReportsPage(),
+];
 
 class Homepage extends StatefulWidget {
   Homepage({Key? key}) : super(key: key);
@@ -23,6 +30,7 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
+  int _selectedIndex = 0;
   final _controller = PageController();
 
   @override
@@ -151,16 +159,14 @@ class _HomepageState extends State<Homepage> {
                 labelColor: Colors.black,
                 fontSize: 20,
               ),
-              SizedBox(
-                height: 25,
-              ),
+              SizedBox(height: 25),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     GestureDetector(
-                      onTap: (){
+                      onTap: () {
                         //Navigator.pushNamed(context, '/accounts');
                       },
                       child: MyButton(
@@ -168,7 +174,6 @@ class _HomepageState extends State<Homepage> {
                         buttonText: "Bills",
                       ),
                     ),
-                    //MyButton(iconImagePath: iconImagePath, buttonText: buttonText)
                     GestureDetector(
                       child: MyButton(
                         iconImagePath: "images/withdraw.png",
@@ -215,3 +220,5 @@ class _HomepageState extends State<Homepage> {
     Get.offAllNamed("/login");
   }
 }
+
+
