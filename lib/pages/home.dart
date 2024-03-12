@@ -220,5 +220,3 @@ class _HomepageState extends State<Homepage> {
     Get.offAllNamed("/login");
   }
 }
-
-
