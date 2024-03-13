@@ -1,5 +1,8 @@
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:flutter_app/views/customText.dart';
 
 class ReportsPage extends StatefulWidget {
   @override
@@ -61,7 +64,8 @@ class _ReportsPageState extends State<ReportsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Reports'),
+        title: Text('Reports',style: TextStyle(fontWeight: FontWeight.w300),),
+        
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -156,16 +160,23 @@ class _ReportsPageState extends State<ReportsPage> {
                   .toList(),
             ),
             SizedBox(height: 16.0),
-            Expanded(
-              child: charts.PieChart(
-                _chartData,
-                animate: true,
-                animationDuration: Duration(seconds: 1),
-                behaviors: [
-                  charts.DatumLegend(),
-                ],
-              ),
-            ),
+            // Expanded(
+            //   child: charts.PieChart(
+            //     _chartData,
+            //     animate: true,
+            //     animationDuration: Duration(seconds: 1),
+            //     behaviors: [
+            //       charts.DatumLegend(),
+            //     ],
+            //   ),
+            // ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                customText(label: "View all the reports"),
+                Icon(Icons.arrow_forward_ios),
+              ],
+            )
           ],
         ),
       ),
