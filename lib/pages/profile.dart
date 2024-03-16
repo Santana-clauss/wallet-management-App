@@ -57,9 +57,12 @@ class ProfilePage extends StatelessWidget {
               ElevatedButton(
                   onPressed: () {},
                   child: customButton(buttonLabel: "Edit Profile"),
-                  style: ElevatedButton.styleFrom(backgroundColor: primaryColor)),
-                  SizedBox(height: 20,),
-        
+                  style:
+                      ElevatedButton.styleFrom(backgroundColor: primaryColor)),
+              SizedBox(
+                height: 20,
+              ),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
