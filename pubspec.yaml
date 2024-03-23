@@ -34,6 +34,7 @@ dependencies:
   salomon_bottom_bar: ^3.3.2
   google_nav_bar: ^5.0.6
   shared_preferences: ^2.2.2
+  http: 1.2.0
 
 
   # The following adds the Cupertino Icons font to your application.

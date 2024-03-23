@@ -48,10 +48,10 @@ class Homepage extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: appGreyColor,
+                    color: appGreyColor.withOpacity(0.1),
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(Icons.person),
+                  child: Icon(Icons.settings),
                 ),
               ],
             ),
@@ -106,6 +106,12 @@ class Homepage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 GestureDetector(
+                  child: MyButton(
+                    iconImagePath: "images/send.png",
+                    buttonText: "Transfer",
+                  ),
+                ),
+                GestureDetector(
                   onTap: () {
                     // Navigator.pushNamed(context, '/accounts');
                   },
@@ -120,12 +126,7 @@ class Homepage extends StatelessWidget {
                     buttonText: "Withdraw",
                   ),
                 ),
-                GestureDetector(
-                  child: MyButton(
-                    iconImagePath: "images/send.png",
-                    buttonText: "Transfer",
-                  ),
-                ),
+                
               ],
             ),
           ),
