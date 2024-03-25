@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_app/controllers/usercontroller.dart';
+import 'package:flutter_app/model/usermodel.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
@@ -32,7 +33,7 @@ class Users extends StatelessWidget {
       children: [
         SizedBox(height: 200),
         Obx(
-          () => studentController.loadingStudent.value
+          () => userController.loadingUser.value
               ? Center(child: Text("Loading..."))
               : ListView.builder(
                   shrinkWrap: true,
@@ -51,7 +52,7 @@ class Users extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                                "${studentController.studentList[index].sname}"),
+                                "${userController.UserList[index].sname}"),
                             Icon(
                               iconList[index],
                               color: Colors.blueAccent,
@@ -61,7 +62,7 @@ class Users extends StatelessWidget {
                       ),
                     );
                   },
-                  itemCount: studentController.studentList.length,
+                  itemCount: userController.UserList.length,
                 ),
         ),
       ],
@@ -70,19 +71,19 @@ class Users extends StatelessWidget {
 
   Future<void> getStudentList() async {
     http.Response response =
-        await http.get(Uri.parse("https://churchapp.co.ke/students/read.php"));
+        await http.get(Uri.parse("https://sanerylgloann.co.ke/wallet_app/read_user.php"));
     if (response.statusCode == 200) {
       var studentResponse = json.decode(response.body);
       var studentData = studentResponse['data'];
-      List<StudentModel> students = List<StudentModel>.from(
-          studentData.map((std) => StudentModel.fromJson(std)));
+      List<UserModel> students = List<UserModel>.from(
+          studentData.map((std) => UserModel.fromJson(std)));
       var student =
-          studentData.map((std) => StudentModel.fromJson(studentData));
-      studentController.updateStudentList(student);
+          studentData.map((std) => UserModel.fromJson(studentData));
+      userController.updateStudentList(student);
       //if login  focus on success message
     } else {
       print("Server error ${response.statusCode}");
     }
-    studentController.loadingStudent.value = false;
+    userController.loadingUser.value = false;
   }
 }
