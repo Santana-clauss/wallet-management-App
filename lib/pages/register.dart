@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_app/config/const.dart';
 import 'package:flutter_app/views/customButton.dart';
@@ -7,16 +9,18 @@ import 'package:flutter_app/views/customText.dart';
 import 'package:flutter_app/views/customTextField.dart';
 import 'package:get/get.dart';
 
+import 'package:http/http.dart' as http;
+
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController firstNameController = TextEditingController();
-    final TextEditingController lastNameController = TextEditingController();
-    final TextEditingController emailController = TextEditingController();
-    final TextEditingController passwordController = TextEditingController();
-    final TextEditingController phoneNumberController = TextEditingController();
+    final TextEditingController fName = TextEditingController();
+    final TextEditingController lName = TextEditingController();
+    final TextEditingController email = TextEditingController();
+    final TextEditingController password = TextEditingController();
+    final TextEditingController phone = TextEditingController();
     final TextEditingController renterPasswordController =
         TextEditingController();
 
@@ -84,31 +88,31 @@ class RegisterScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             customTextField(
-                              userFieldController: firstNameController,
+                              userFieldController: fName,
                               hint: "First Name",
                               icon: Icons.person,
                             ),
                             SizedBox(height: 15),
                             customTextField(
-                              userFieldController: lastNameController,
+                              userFieldController: lName,
                               hint: "Last Name",
                               icon: Icons.person,
                             ),
                             SizedBox(height: 15),
                             customTextField(
-                              userFieldController: emailController,
+                              userFieldController: email,
                               hint: "youremail@example.com",
                               icon: Icons.email,
                             ),
                             SizedBox(height: 15),
                             customTextField(
-                              userFieldController: phoneNumberController,
+                              userFieldController: phone,
                               hint: "Phone number",
                               icon: Icons.phone,
                             ),
                             SizedBox(height: 15),
                             customTextField(
-                              userFieldController: passwordController,
+                              userFieldController: password,
                               hint: "Password",
                               icon: Icons.lock,
                               hideText: true,
@@ -121,7 +125,7 @@ class RegisterScreen extends StatelessWidget {
                               hideText: true,
                             ),
                             SizedBox(height: 20),
-                            customButton(buttonLabel: "Sign up",action: gotoLogin,),
+                            customButton(buttonLabel: "Sign up",action: () => serverSignup(),),
                             // ElevatedButton(
                             //   onPressed: () {
                             //     Navigator.push(
@@ -169,10 +173,33 @@ class RegisterScreen extends StatelessWidget {
     );
   }
 
-  void gotoLogin() {
+   void gotoLogin() {
     Get.offAllNamed("/login");
   }
   void gotoRegister() {
     Get.offAllNamed("/");
+  }
+
+ Future<void> serverSignup() async {
+    http.Response response;
+    var body = {
+      'phone': phone.text.trim(),
+      "email": email.text.trim(),
+      "fname": fName.text.trim(),
+      "sname": sname.text.trim(),
+      "password":password.text.trim(),
+    };
+    response = await http.post(
+      Uri.parse("https://sanerylgloann.co.ke/wallet_app/create_user.php"),
+      body: body,
+    );
+    if (response.statusCode == 200) {
+      var serverResponse = json.decode(response.body);
+      if (serverResponse["success"] == true) {
+        Get.offAllNamed("/login");
+      } 
+    } else {
+      print(
+          "Failed to connect to the server.");
   }
 }
