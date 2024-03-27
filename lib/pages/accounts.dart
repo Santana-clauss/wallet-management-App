@@ -1,5 +1,8 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:flutter_app/views/customcard.dart';
+import 'package:get/get.dart';
 
 class AccountsPage extends StatefulWidget {
   @override
@@ -53,16 +56,11 @@ class _AccountsPageState extends State<AccountsPage> {
                   ? Text(account.cardNumber.toString())
                   : null,
               onTap: () {
-                // Show account details or edit dialog
+                
+                Get.offNamed('/home');
               },
             ),
           );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {
-          // Show dialog to add a new account
         },
       ),
     );

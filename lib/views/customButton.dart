@@ -8,10 +8,12 @@ import 'package:flutter_app/views/customText.dart';
 class customButton extends StatelessWidget {
   final String buttonLabel;
   final VoidCallback? action;
+  //final VoidCallback? onTap;
   const customButton({
     super.key,
     this.action,
     required this.buttonLabel,
+    //this.onTap,
   });
 
   //final TextEditingController userNameController;
@@ -20,12 +22,13 @@ class customButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
         onPressed: action,
+      
         child: customText(
           label: buttonLabel,
           labelColor: appWhiteColor,
         ),
         style: ElevatedButton.styleFrom(
-          backgroundColor: appGreenColor,
+          backgroundColor:greenColor,
           elevation: 10,
           padding: const EdgeInsets.all(20),
           shadowColor: primaryColor,

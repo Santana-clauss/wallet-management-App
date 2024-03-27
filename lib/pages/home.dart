@@ -3,16 +3,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/config/const.dart';
 import 'package:flutter_app/controllers/controllers.dart';
-import 'package:flutter_app/pages/accounts.dart';
-import 'package:flutter_app/pages/home.dart'; // Assuming this is your homepage
-import 'package:flutter_app/pages/profile.dart';
-import 'package:flutter_app/pages/reports.dart';
+import 'package:flutter_app/pages/settings.dart';
 import 'package:flutter_app/views/customText.dart';
 import 'package:flutter_app/views/customcard.dart';
 import 'package:flutter_app/views/customedetails.dart';
 import 'package:flutter_app/views/customtbutton.dart';
 import 'package:get/get.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 HomeController homeController = Get.put(HomeController());
@@ -48,10 +44,13 @@ class Homepage extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: appGreyColor.withOpacity(0.1),
+                    color: greenColor.withOpacity(0.1),
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(Icons.settings),
+                  child: GestureDetector(onTap:(){
+                    Get.to(SettingsPage());
+
+                  },child: Icon(Icons.settings)),
                 ),
               ],
             ),
@@ -73,7 +72,7 @@ class Homepage extends StatelessWidget {
                   balance: 3000,
                   cardNumber: 048934178,
                   expiryMonth: 10,
-                  color: Colors.purple,
+                  color: Colors.yellow,
                   expiryYear: 2026,
                 ),
                 MyWallet(

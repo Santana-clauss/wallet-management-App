@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_app/config/const.dart';
-import 'package:flutter_app/views/customButton.dart';
 import 'package:flutter_app/views/customProfile.dart';
 import 'package:flutter_app/views/customText.dart';
 import 'package:flutter_app/views/customedetails.dart';
@@ -21,14 +20,15 @@ class ProfilePage extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(context, '/home');
-                      },
-                      child: Icon(Icons.arrow_back)),
-                  Icon(Icons.settings),
+                  // GestureDetector(
+                  //     onTap: () {
+                  //       Navigator.pushNamed(context,'/home');
+                  //     },
+                  //     child: Icon(Icons.arrow_back)),
+                  // Icon(Icons.settings),
                 ],
               ),
+              SizedBox(height: 10,),
               Container(
                 height: 60,
                 width: 60,
@@ -54,11 +54,14 @@ class ProfilePage extends StatelessWidget {
                 height: 20,
               ),
               //customButton(buttonLabel: "Edit Profile",),
-              ElevatedButton(
-                  onPressed: () {},
-                  child: customButton(buttonLabel: "Edit Profile"),
-                  style:
-                      ElevatedButton.styleFrom(backgroundColor: primaryColor)),
+              ElevatedButton(onPressed: (){},
+            style: ElevatedButton.styleFrom(
+              primary: greenColor,
+              onPrimary: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),)), child: Text("Edit Profile")
+          
+               ),
               SizedBox(
                 height: 20,
               ),

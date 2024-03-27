@@ -1,4 +1,6 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, avoid_print
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_app/config/const.dart';
 import 'package:flutter_app/utils/preferences.dart';
@@ -6,8 +8,9 @@ import 'package:flutter_app/views/customButton.dart';
 import 'package:flutter_app/views/customText.dart';
 import 'package:flutter_app/views/customTextField.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 
-final TextEditingController userNameController = TextEditingController();
+final TextEditingController emailController = TextEditingController();
 final TextEditingController passwordController = TextEditingController();
 preferences myPref=preferences();
 class LoginScreen extends StatelessWidget {
@@ -16,7 +19,7 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     myPref.getValue("username").then((value) => {
-      userNameController.text=value
+      emailController.text=value
     });
   
     return Scaffold(
@@ -65,9 +68,9 @@ class LoginScreen extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              customText(label: "username"),
+                              customText(label: "Email",),
                               customTextField(
-                                userFieldController: userNameController,
+                                userFieldController: emailController,
                                 //hint: "youremail@example.com",
                                 icon: Icons.email,
                               ),
@@ -81,7 +84,9 @@ class LoginScreen extends StatelessWidget {
                               SizedBox(height: 20),
                               customButton(
                                 buttonLabel: "Login",
-                                action: gotoHome,
+                                action:(){serverLogin();
+                                Get.toNamed("/home");
+                                }
                               ),
                               SizedBox(
                                 height: 25,
@@ -122,7 +127,26 @@ class LoginScreen extends StatelessWidget {
   }
 
   void gotoHome() {
-    myPref.setValue("username", userNameController.text);
+    myPref.setValue("email", emailController.text);
     Get.offAllNamed("/home");
   }
+  
+   Future<void> serverLogin() async {
+    http.Response response;
+    response = await http.get(Uri.parse(
+        "https://sanerylgloann.co.ke/wallet_app/read_users.php?email=$emailController.text.trim()}&password=${passwordController.text.trim()}"));
+    if (response.statusCode == 200) {
+      var serverResponse = json.decode(response.body);
+      int loginStatus = serverResponse['success'];
+      if (loginStatus == 1) {
+        gotoHome();
+      } else {
+        print('email or password is incorrect');
+      }
+    } else {
+      print("server error&{response.statusCode}");
+    }
+  }
+
+  
 }

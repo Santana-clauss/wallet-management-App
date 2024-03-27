@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_app/config/const.dart';
+import 'package:flutter_app/pages/login.dart';
 import 'package:flutter_app/views/customButton.dart';
 import 'package:flutter_app/views/customText.dart';
 import 'package:flutter_app/views/customTextField.dart';
@@ -11,18 +12,19 @@ import 'package:get/get.dart';
 
 import 'package:http/http.dart' as http;
 
+
+final TextEditingController fName = TextEditingController();
+final TextEditingController lName = TextEditingController();
+final TextEditingController email = TextEditingController();
+final TextEditingController password = TextEditingController();
+final TextEditingController phone = TextEditingController();
+final TextEditingController renterPasswordController = TextEditingController();
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController fName = TextEditingController();
-    final TextEditingController lName = TextEditingController();
-    final TextEditingController email = TextEditingController();
-    final TextEditingController password = TextEditingController();
-    final TextEditingController phone = TextEditingController();
-    final TextEditingController renterPasswordController =
-        TextEditingController();
+
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -125,7 +127,21 @@ class RegisterScreen extends StatelessWidget {
                               hideText: true,
                             ),
                             SizedBox(height: 20),
-                            customButton(buttonLabel: "Sign up",action: () => serverSignup(),),
+                            // ElevatedButton(onPressed: (){
+                            //   serverSignup();
+                            //   Get.toNamed("/login");
+                            //   style: ElevatedButton.styleFrom(
+                            //    backgroundColor: greenColor,
+                            //    foregroundColor: Colors.white,
+                            //    shape: RoundedRectangleBorder(
+                            //    borderRadius: BorderRadius.circular(20),)); 
+                            // }, child: Text("Signup"))
+
+                            customButton(buttonLabel: "Sign up",action: (){serverSignup();
+                            Get.toNamed("/login");}
+                            
+                            ),
+                            
                             // ElevatedButton(
                             //   onPressed: () {
                             //     Navigator.push(
@@ -147,6 +163,7 @@ class RegisterScreen extends StatelessWidget {
                             //     ),
                             //   ),
                             // ),
+                            
                             SizedBox(height: 25),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
@@ -182,24 +199,23 @@ class RegisterScreen extends StatelessWidget {
 
  Future<void> serverSignup() async {
     http.Response response;
-    var body = {
+    var body={
       'phone': phone.text.trim(),
-      "email": email.text.trim(),
-      "fname": fName.text.trim(),
-      "sname": sname.text.trim(),
-      "password":password.text.trim(),
-    };
+      'email': email.text.trim(),
+      'fname': fName.text.trim(),
+      'sname': lName.text.trim(),
+      'password':password.text.trim(),
+};
     response = await http.post(
       Uri.parse("https://sanerylgloann.co.ke/wallet_app/create_user.php"),
       body: body,
     );
     if (response.statusCode == 200) {
       var serverResponse = json.decode(response.body);
-      if (serverResponse["success"] == true) {
-        Get.offAllNamed("/login");
+      int signedUp=serverResponse['success '];
+      if (signedUp == 1) {
+        Get.offAndToNamed('/login');
       } 
-    } else {
-      print(
-          "Failed to connect to the server.");
-  }
+    }
+}
 }

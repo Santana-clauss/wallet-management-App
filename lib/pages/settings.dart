@@ -14,12 +14,12 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: primaryColor.withOpacity(0.8),
+        backgroundColor: greenColor,
         leading: IconButton(
             icon: Icon(
               Icons.arrow_back,
             ),
-            onPressed: () => Get.toNamed("/homepage")),
+            onPressed: () => Get.toNamed("/home")),
         automaticallyImplyLeading: true,
       ),
       body: Padding(
@@ -123,7 +123,16 @@ class SettingsPage extends StatelessWidget {
                 ),
               ],
             ),
-          ],
+            SizedBox(height: 80,),
+            ElevatedButton(onPressed: (){}, child: Text("Sign out"),
+            style: ElevatedButton.styleFrom(
+              primary: greenColor,
+              onPrimary: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),))
+          
+        )],
+        
         ),
       ),
     );

@@ -152,7 +152,7 @@ class _ReportsPageState extends State<ReportsPage> {
                   selectedTransactionType = value;
                 });
               },
-              items: ['Withdrawals', 'Bills', 'Sent']
+              items: ['Withdrawals', 'Bills', 'Transfers']
                   .map((type) => DropdownMenuItem(
                         value: type,
                         child: Text(type),
@@ -160,16 +160,7 @@ class _ReportsPageState extends State<ReportsPage> {
                   .toList(),
             ),
             SizedBox(height: 16.0),
-            // Expanded(
-            //   child: charts.PieChart(
-            //     _chartData,
-            //     animate: true,
-            //     animationDuration: Duration(seconds: 1),
-            //     behaviors: [
-            //       charts.DatumLegend(),
-            //     ],
-            //   ),
-            // ),
+          
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
