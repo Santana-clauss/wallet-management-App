@@ -4,9 +4,10 @@ import 'package:http/http.dart' as http;
 
 
 class TransactionController {
-  static const String baseUrl = '';
+  static const String baseUrl =
+      'https://example.com/api'; // Replace with your API base URL
 
-  Future<TransactionModel> recordDeposit(
+  Future<Transaction> recordDeposit(
       int userId, int walletId, double amount) async {
     final response = await http.post(
       Uri.parse('$baseUrl/transactions/deposit'),
@@ -20,13 +21,13 @@ class TransactionController {
     );
 
     if (response.statusCode == 200) {
-      return TransactionModel.fromJson(jsonDecode(response.body));
+      return Transaction.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to record deposit');
     }
   }
 
-  Future<TransactionModel> recordWithdrawal(
+  Future<Transaction> recordWithdrawal(
       int userId, int walletId, double amount) async {
     final response = await http.post(
       Uri.parse('$baseUrl/transactions/withdrawal'),
@@ -40,13 +41,13 @@ class TransactionController {
     );
 
     if (response.statusCode == 200) {
-      return TransactionModel.fromJson(jsonDecode(response.body));
+      return Transaction.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to record withdrawal');
     }
   }
 
-  Future<TransactionModel> recordTransfer(
+  Future<Transaction> recordTransfer(
       int userId, int fromWalletId, int toWalletId, double amount) async {
     final response = await http.post(
       Uri.parse('$baseUrl/transactions/transfer'),
@@ -61,30 +62,9 @@ class TransactionController {
     );
 
     if (response.statusCode == 200) {
-      return TransactionModel.fromJson(jsonDecode(response.body));
+      return Transaction.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to record transfer');
-    }
-  }
-
-  Future<TransactionModel> recordBillPayment(
-      int userId, int walletId, double amount, String billDetails) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl/transactions/bill-payment'),
-      body: jsonEncode({
-        'user_id': userId,
-        'wallet_id': walletId,
-        'transaction_type': 'Bill Payment',
-        'amount': amount,
-        'bill_details': billDetails,
-      }),
-      headers: {'Content-Type': 'application/json'},
-    );
-
-    if (response.statusCode == 200) {
-      return TransactionModel.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception('Failed to record bill payment');
     }
   }
 }

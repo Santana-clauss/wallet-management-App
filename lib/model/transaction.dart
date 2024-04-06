@@ -1,47 +1,35 @@
-class TransactionModel {
+class Transaction {
   final int transactionId;
   final int userId;
-  final int fromWalletId;
-  final int toWalletId;
+  final int walletId;
   final String transactionType;
   final double amount;
-  final DateTime transactionDate;
-  final String otherRelevantInfo;
 
-  TransactionModel({
+  Transaction({
     required this.transactionId,
     required this.userId,
-    required this.fromWalletId,
-    required this.toWalletId,
+    required this.walletId,
     required this.transactionType,
     required this.amount,
-    required this.transactionDate,
-    required this.otherRelevantInfo,
   });
 
-  factory TransactionModel.fromJson(Map<String, dynamic> json) {
-    return TransactionModel(
-      transactionId: json['transaction_id'],
-      userId: json['user_id'],
-      fromWalletId: json['from_wallet_id'],
-      toWalletId: json['to_wallet_id'],
-      transactionType: json['transaction_type'],
-      amount: json['amount'],
-      transactionDate: DateTime.parse(json['transaction_date']),
-      otherRelevantInfo: json['other_relevant_info'],
+  factory Transaction.fromJson(Map<String, dynamic> json) {
+    return Transaction(
+      transactionId: json['transactionId'],
+      userId: json['userId'],
+      walletId: json['walletId'],
+      transactionType: json['transactionType'],
+      amount: json['amount'].toDouble(),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'transaction_id': transactionId,
-      'user_id': userId,
-      'from_wallet_id': fromWalletId,
-      'to_wallet_id': toWalletId,
-      'transaction_type': transactionType,
+      'transactionId': transactionId,
+      'userId': userId,
+      'walletId': walletId,
+      'transactionType': transactionType,
       'amount': amount,
-      'transaction_date': transactionDate.toIso8601String(),
-      'other_relevant_info': otherRelevantInfo,
     };
   }
 }

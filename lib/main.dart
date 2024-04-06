@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/pages/deposit.dart';
+import 'package:flutter_app/pages/withdrawpage.dart';
 //import 'package:flutter_app/utils/routes.dart';
 import 'package:flutter_app/views/custompage.dart';
 
@@ -11,6 +12,6 @@ void main() {
     // initialRoute: "/",
     // debugShowCheckedModeBanner: false,
     // getPages: Routes.routes
-    home: MyPage()
+    home: WithdrawPage(),
   ));
 }

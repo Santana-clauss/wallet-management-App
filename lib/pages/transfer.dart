@@ -4,10 +4,48 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/views/customText.dart';
 import 'package:flutter_app/views/customTextField.dart';
 
-TextEditingController amount = TextEditingController();
+class TransferPage extends StatefulWidget {
+  const TransferPage({Key? key}) : super(key: key);
 
-class WithdrawPage extends StatelessWidget {
-  const WithdrawPage({Key? key});
+  @override
+  _TransferPageState createState() => _TransferPageState();
+}
+
+class _TransferPageState extends State<TransferPage> {
+  late TextEditingController amountController;
+
+  @override
+  void initState() {
+    super.initState();
+    amountController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    amountController.dispose();
+    super.dispose();
+  }
+
+  void addAmount(String number) {
+    if (amountController.text == '0') {
+      amountController.text = '';
+    }
+    setState(() {
+      amountController.text = amountController.text + number;
+    });
+  }
+
+  void deleteAmount() {
+    if (amountController.text.isNotEmpty) {
+      setState(() {
+        amountController.text = amountController.text
+            .substring(0, amountController.text.length - 1);
+        if (amountController.text.isEmpty) {
+          amountController.text = '0';
+        }
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,22 +72,22 @@ class WithdrawPage extends StatelessWidget {
                     children: [
                       SizedBox(height: 20),
                       customText(
-                        label: 'Select wallet to withdraw from:',
+                        label: 'Select wallet to transfer to:',
                         fontSize: 18,
                       ),
                       SizedBox(height: 10),
-                      DropdownButtonFormField(
+                      DropdownButtonFormField<String>(
                         borderRadius: BorderRadius.circular(20),
                         items: [
-                          DropdownMenuItem(
+                          DropdownMenuItem<String>(
                             value: 'savings',
                             child: Text('Savings Account'),
                           ),
-                          DropdownMenuItem(
+                          DropdownMenuItem<String>(
                             value: 'visa',
                             child: Text('Visa Card'),
                           ),
-                          DropdownMenuItem(
+                          DropdownMenuItem<String>(
                             value: 'kcb',
                             child: Text('KCB Card'),
                           ),
@@ -59,28 +97,28 @@ class WithdrawPage extends StatelessWidget {
                         },
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.symmetric(horizontal: 15),
-                          //border: InputBorder.none,
                           border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10)),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                         ),
                       ),
                       SizedBox(height: 20),
                       customText(
-                        label: 'Enter amount to withdraw:',
+                        label: 'Enter amount to transfer:',
                         fontSize: 18,
                       ),
                       SizedBox(height: 20),
-                      customTextField(userFieldController: amount),
+                      customTextField(userFieldController: amountController),
                       SizedBox(height: 40),
                       ElevatedButton(
                         onPressed: () {
-                          // Add logic to handle deposit
+                          // Add logic to handle transfer
                         },
                         style: ElevatedButton.styleFrom(
                           primary: Colors.green,
                         ),
                         child: Text(
-                          'Withdraw',
+                          'Transfer',
                         ),
                       ),
                     ],
