@@ -6,8 +6,8 @@ import 'package:flutter_app/views/customTextField.dart';
 
 TextEditingController amount = TextEditingController();
 
-class DepositPage extends StatelessWidget {
-  const DepositPage({Key? key});
+class WithdrawPage extends StatelessWidget {
+  const WithdrawPage({Key? key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class DepositPage extends StatelessWidget {
                 width: 400,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  color: Colors.grey[200], 
+                  color: Colors.grey[200],
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
@@ -58,8 +58,7 @@ class DepositPage extends StatelessWidget {
                           // Handle wallet selection
                         },
                         decoration: InputDecoration(
-                          contentPadding: EdgeInsets.symmetric(
-                              horizontal: 15),
+                          contentPadding: EdgeInsets.symmetric(horizontal: 15),
                           //border: InputBorder.none,
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10)),

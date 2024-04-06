@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/views/customText.dart';
 import 'package:flutter_app/views/customTextField.dart';
 
-TextEditingController amount = TextEditingController();
+TextEditingController amount=TextEditingController();
 
-class DepositPage extends StatelessWidget {
-  const DepositPage({Key? key});
+class MyPage extends StatelessWidget {
+  const MyPage({Key? key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class DepositPage extends StatelessWidget {
                 width: 400,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  color: Colors.grey[200], 
+                  color: Colors.grey[200], // Change container color here
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
@@ -59,10 +59,12 @@ class DepositPage extends StatelessWidget {
                         },
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.symmetric(
-                              horizontal: 15),
-                          //border: InputBorder.none,
+                              horizontal: 15), // Adjust content padding
+                          //border: InputBorder.none, 
                           border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10)),
+                            borderRadius: BorderRadius.circular(10)
+                          ),
+
                         ),
                       ),
                       SizedBox(height: 20),
@@ -78,11 +80,9 @@ class DepositPage extends StatelessWidget {
                           // Add logic to handle deposit
                         },
                         style: ElevatedButton.styleFrom(
-                          primary: Colors.green,
+                          primary: Colors.green, 
                         ),
-                        child: Text(
-                          'Deposit',
-                        ),
+                        child: Text('Deposit',),
                       ),
                     ],
                   ),
