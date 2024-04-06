@@ -72,10 +72,40 @@ class _TransferPageState extends State<TransferPage> {
                     children: [
                       SizedBox(height: 20),
                       customText(
-                        label: 'Select wallet to transfer to:',
+                        label: 'Select wallet to transfer from:',
                         fontSize: 18,
                       ),
                       SizedBox(height: 10),
+                      DropdownButtonFormField<String>(
+                        borderRadius: BorderRadius.circular(20),
+                        items: [
+                          DropdownMenuItem<String>(
+                            value: 'savings',
+                            child: Text('Savings Account'),
+                          ),
+                          DropdownMenuItem<String>(
+                            value: 'visa',
+                            child: Text('Visa Card'),
+                          ),
+                          DropdownMenuItem<String>(
+                            value: 'kcb',
+                            child: Text('KCB Card'),
+                          ),
+                          
+                          
+                        ],
+                        onChanged: (value) {
+                          // Handle wallet selection
+                        },
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(horizontal: 15),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      customText(label: "Select wallet to transfer to",),
                       DropdownButtonFormField<String>(
                         borderRadius: BorderRadius.circular(20),
                         items: [

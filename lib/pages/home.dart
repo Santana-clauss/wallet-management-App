@@ -105,6 +105,10 @@ class Homepage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 GestureDetector(
+                  onTap: (){
+                    Navigator.pushNamed(context,'/transfer');
+                  },
+
                   child: MyButton(
                     iconImagePath: "images/send.png",
                     buttonText: "Transfer",
@@ -112,14 +116,17 @@ class Homepage extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-                    // Navigator.pushNamed(context, '/accounts');
+                     Navigator.pushNamed(context, '/deposit');
                   },
                   child: MyButton(
                     iconImagePath: "images/deposit.png",
-                    buttonText: "Bills",
+                    buttonText: "Deposit",
                   ),
                 ),
                 GestureDetector(
+                  onTap: (){
+                    Navigator.pushNamed(context, '/withdraw');
+                  },
                   child: MyButton(
                     iconImagePath: "images/withdraw.png",
                     buttonText: "Withdraw",

@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'package:flutter_app/controllers/transcationcontroller.dart';
 import 'package:flutter_app/views/customText.dart';
 import 'package:flutter_app/views/customTextField.dart';
 
@@ -75,7 +76,9 @@ class DepositPage extends StatelessWidget {
                       SizedBox(height: 40),
                       ElevatedButton(
                         onPressed: () {
-                          // Add logic to handle deposit
+                          depositTransaction(userId, selectedWalletId,
+                              double.parse(amount.text));
+                          
                         },
                         style: ElevatedButton.styleFrom(
                           primary: Colors.green,

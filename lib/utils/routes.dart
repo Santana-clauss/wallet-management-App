@@ -10,6 +10,7 @@ import 'package:flutter_app/pages/register.dart';
 import 'package:flutter_app/pages/reports.dart';
 import 'package:flutter_app/pages/transactions.dart';
 import 'package:flutter_app/pages/transfer.dart';
+import 'package:flutter_app/pages/withdrawpage.dart';
 
 import 'package:get/get.dart';
 
@@ -23,6 +24,7 @@ class Routes{
     GetPage(name: "/profile", page: () => ProfilePage()),
     GetPage(name: "/deposit", page: () => DepositPage()),
     GetPage(name: "/transfer", page: () => TransferPage()),
+    GetPage(name: "/withdraw", page: () => WithdrawPage()),
     
   ];
 }

@@ -1,10 +1,18 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:js';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_app/controllers/transcationcontroller.dart';
+import 'package:flutter_app/services/userauth.dart';
+import 'package:flutter_app/services/walletauth.dart';
 import 'package:flutter_app/views/customText.dart';
 import 'package:flutter_app/views/customTextField.dart';
+import 'package:provider/provider.dart';
 
 TextEditingController amount = TextEditingController();
+final userProvider = Provider.of<UserProvider>(context as BuildContext);
+final walletProvider = Provider.of<WalletProvider>(context as BuildContext);
 
 class WithdrawPage extends StatelessWidget {
   const WithdrawPage({Key? key});
@@ -64,6 +72,7 @@ class WithdrawPage extends StatelessWidget {
                               borderRadius: BorderRadius.circular(10)),
                         ),
                       ),
+                      
                       SizedBox(height: 20),
                       customText(
                         label: 'Enter amount to withdraw:',
@@ -75,6 +84,10 @@ class WithdrawPage extends StatelessWidget {
                       ElevatedButton(
                         onPressed: () {
                           // Add logic to handle deposit
+                          depositTransaction(
+                              userProvider.userId!,
+                              walletProvider.selectedWalletId!,
+                              double.parse(amount.text));
                         },
                         style: ElevatedButton.styleFrom(
                           primary: Colors.green,
