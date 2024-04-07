@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutable
 
 import 'dart:convert';
 
@@ -92,7 +92,6 @@ class _DepositPageState extends State<DepositPage> {
                       SizedBox(height: 40),
                       ElevatedButton(
                         onPressed: () {
-                          // Call depositTransaction with selected wallet
                           if (selectedWallet != null) {
                             depositTransaction(
                               toWalletId: selectedWallet!,
@@ -125,7 +124,8 @@ class _DepositPageState extends State<DepositPage> {
                         child: Text(
                           'Deposit',
                         ),
-                      ),
+                      )
+
                     ],
                   ),
                 ),
@@ -160,24 +160,15 @@ Future<void> depositTransaction({
   required double amount,
 }) async {
   try {
-    // Perform HTTP request to deposit to the selected wallet
     final response = await http.post(
       Uri.parse('https://sanerylgloann.co.ke/wallet_app/createTranscation.php'),
       body: {
-        'user_id': '123', // Replace '123' with the actual user ID
-        'from_wallet_id':
-            '', // Since this is a deposit, there's no 'from_wallet_id'
-        'to_wallet_id': toWalletId,
-        'transaction_type': 'deposit',
+        'wallet_id': toWalletId,
+        'transaction_type': 'Deposit',
         'amount': amount.toString(),
-        'transaction_date':
-            DateTime.now().toString(), // Or use the actual transaction date
-        'other_relevant_info':
-            '', // Add any other relevant information if needed
       },
     );
 
-    // Handle the response accordingly
     if (response.statusCode == 200) {
       final responseData = json.decode(response.body);
       if (responseData['success'] == 1) {
