@@ -1,21 +1,25 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'dart:js';
-
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/controllers/transcationcontroller.dart';
-import 'package:flutter_app/services/userauth.dart';
-import 'package:flutter_app/services/walletauth.dart';
 import 'package:flutter_app/views/customText.dart';
 import 'package:flutter_app/views/customTextField.dart';
-import 'package:provider/provider.dart';
+import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 
 TextEditingController amount = TextEditingController();
-final userProvider = Provider.of<UserProvider>(context as BuildContext);
-final walletProvider = Provider.of<WalletProvider>(context as BuildContext);
+TransactionController transcationController = Get.put(TransactionController());
 
-class WithdrawPage extends StatelessWidget {
-  const WithdrawPage({Key? key});
+class WithdrawPage extends StatefulWidget {
+  const WithdrawPage({Key? key}) : super(key: key);
+
+  @override
+  _WithdrawPageState createState() => _WithdrawPageState();
+}
+
+class _WithdrawPageState extends State<WithdrawPage> {
+  String? selectedWallet;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +50,8 @@ class WithdrawPage extends StatelessWidget {
                         fontSize: 18,
                       ),
                       SizedBox(height: 10),
-                      DropdownButtonFormField(
+                      DropdownButtonFormField<String>(
+                        value: selectedWallet,
                         borderRadius: BorderRadius.circular(20),
                         items: [
                           DropdownMenuItem(
@@ -63,16 +68,19 @@ class WithdrawPage extends StatelessWidget {
                           ),
                         ],
                         onChanged: (value) {
-                          // Handle wallet selection
+                          setState(() {
+                            selectedWallet = value;
+                          });
                         },
                         decoration: InputDecoration(
-                          contentPadding: EdgeInsets.symmetric(horizontal: 15),
-                          //border: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: 15,
+                          ),
                           border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10)),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                         ),
                       ),
-                      
                       SizedBox(height: 20),
                       customText(
                         label: 'Enter amount to withdraw:',
@@ -83,11 +91,18 @@ class WithdrawPage extends StatelessWidget {
                       SizedBox(height: 40),
                       ElevatedButton(
                         onPressed: () {
-                          // Add logic to handle deposit
-                          depositTransaction(
-                              userProvider.userId!,
-                              walletProvider.selectedWalletId!,
-                              double.parse(amount.text));
+                          if (selectedWallet != null) {
+                            withdrawTransaction(
+                              fromWalletId: selectedWallet!,
+                              amount: double.parse(amount.text),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Please select a wallet.'),
+                              ),
+                            );
+                          }
                         },
                         style: ElevatedButton.styleFrom(
                           primary: Colors.green,
@@ -123,5 +138,33 @@ class WithdrawPage extends StatelessWidget {
         )
       ],
     );
+  }
+}
+
+Future<void> withdrawTransaction({
+  required String fromWalletId,
+  required double amount,
+}) async {
+  try {
+    final response = await http.post(
+      // Update the URL with the correct endpoint
+      Uri.parse(
+          'https://sanerylgloann.co.ke/wallet_app/withdraw.php'),
+      body: jsonEncode({
+        'fromWalletId': fromWalletId,
+        'amount': amount,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      print('Withdraw transaction successful');
+    } else {
+      print('Failed to perform withdraw transaction: ${response.body}');
+    }
+  } catch (error) {
+    print('Error: $error');
   }
 }

@@ -1,11 +1,11 @@
-class Transaction {
+class TransactionModel {
   final int transactionId;
   final int userId;
   final int walletId;
   final String transactionType;
   final double amount;
 
-  Transaction({
+  TransactionModel({
     required this.transactionId,
     required this.userId,
     required this.walletId,
@@ -13,8 +13,8 @@ class Transaction {
     required this.amount,
   });
 
-  factory Transaction.fromJson(Map<String, dynamic> json) {
-    return Transaction(
+  factory TransactionModel.fromJson(Map<String, dynamic> json) {
+    return TransactionModel(
       transactionId: json['transactionId'],
       userId: json['userId'],
       walletId: json['walletId'],
