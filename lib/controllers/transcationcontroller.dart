@@ -1,12 +1,19 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/model/transaction.dart';
+import 'package:flutter_app/pages/deposit.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
-
 class TransactionController extends GetxController {
   var transactions = <TransactionModel>[].obs;
+  RxString? _selectedWallet;
+
+  String? get selectedWallet => _selectedWallet?.value;
+
+  void setSelectedWallet(String value) {
+    _selectedWallet = value.obs;
+  }
 
   Future<void> depositTransaction({
     required String toWalletId,
@@ -18,9 +25,11 @@ class TransactionController extends GetxController {
         Uri.parse(
             'https://sanerylgloann.co.ke/wallet_app/createTranscation.php'),
         body: {
-          'wallet_id': toWalletId,
-          'transaction_type': 'Deposit',
+          'user_id': loginController.phoneNumber.value,
+          'to_wallet_id': selectedWallet ?? '',
+          'transaction_type': 'deposit',
           'amount': amount.toString(),
+          'transaction_date': DateTime.now().toString(),
         },
       );
 

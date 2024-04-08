@@ -123,23 +123,47 @@ class _WithdrawPageState extends State<WithdrawPage> {
   }
 
   Column backContainer() {
-    return Column(
-      children: [
-        Container(
-          width: double.infinity,
-          height: 240,
-          decoration: BoxDecoration(
-            color: Colors.green,
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(20),
-              bottomRight: Radius.circular(20),
-            ),
+  return Column(
+    children: [
+      Container(
+        width: double.infinity,
+        height: 240,
+        decoration: BoxDecoration(
+          color: Colors.green,
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(20),
+            bottomRight: Radius.circular(20),
           ),
-        )
-      ],
-    );
-  }
+        ),
+        child: Column(
+          children: [
+            SizedBox(height: 40,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                IconButton(
+                  icon: Icon(Icons.arrow_back),
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/home');
+                  },
+                ),SizedBox(width: 80,),
+                Text(
+                  'Withdraw ',
+                  style: TextStyle(
+                    fontSize: 40,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    ],
+  );
 }
+
 
 Future<void> withdrawTransaction({
   required String fromWalletId,
@@ -167,4 +191,5 @@ Future<void> withdrawTransaction({
   } catch (error) {
     print('Error: $error');
   }
+}
 }

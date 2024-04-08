@@ -1,16 +1,20 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutable
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutable, avoid_print
 
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_app/controllers/logincontroller.dart';
 import 'package:flutter_app/controllers/transcationcontroller.dart';
+import 'package:flutter_app/pages/dashboard.dart';
 import 'package:flutter_app/views/customText.dart';
 import 'package:flutter_app/views/customTextField.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 TextEditingController amount = TextEditingController();
-TransactionController transcationController = Get.put(TransactionController());
+TransactionController transactionController = Get.put(TransactionController());
+LoginController loginController = Get.put(LoginController());
+String? selectedWallet;
 
 class DepositPage extends StatefulWidget {
   const DepositPage({Key? key}) : super(key: key);
@@ -20,8 +24,6 @@ class DepositPage extends StatefulWidget {
 }
 
 class _DepositPageState extends State<DepositPage> {
-  String? selectedWallet;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,6 +73,8 @@ class _DepositPageState extends State<DepositPage> {
                         onChanged: (value) {
                           setState(() {
                             selectedWallet = value;
+                            transactionController
+                                .setSelectedWallet(value!); // Add this line
                           });
                         },
                         decoration: InputDecoration(
@@ -92,8 +96,10 @@ class _DepositPageState extends State<DepositPage> {
                       SizedBox(height: 40),
                       ElevatedButton(
                         onPressed: () {
+                          print("executed");
                           if (selectedWallet != null) {
                             depositTransaction(
+                              
                               toWalletId: selectedWallet!,
                               amount: double.parse(amount.text),
                             );
@@ -124,37 +130,61 @@ class _DepositPageState extends State<DepositPage> {
                         child: Text(
                           'Deposit',
                         ),
-                      )
-
+                      ),
                     ],
                   ),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
     );
   }
 
-  Column backContainer() {
-    return Column(
-      children: [
-        Container(
-          width: double.infinity,
-          height: 240,
-          decoration: BoxDecoration(
-            color: Colors.green,
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(20),
-              bottomRight: Radius.circular(20),
-            ),
+Column backContainer() {
+  return Column(
+    children: [
+      Container(
+        width: double.infinity,
+        height: 240,
+        decoration: BoxDecoration(
+          color: Colors.green,
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(20),
+            bottomRight: Radius.circular(20),
           ),
-        )
-      ],
-    );
-  }
+        ),
+        child: Column(
+          children: [
+            SizedBox(height: 40,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                IconButton(
+                  icon: Icon(Icons.arrow_back),
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/home');
+                  },
+                ),SizedBox(width: 80,),
+                Text(
+                  'Deposit ',
+                  style: TextStyle(
+                    fontSize: 40,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    ],
+  );
 }
+
+
 Future<void> depositTransaction({
   required String toWalletId,
   required double amount,
@@ -162,11 +192,13 @@ Future<void> depositTransaction({
   try {
     final response = await http.post(
       Uri.parse('https://sanerylgloann.co.ke/wallet_app/createTranscation.php'),
-      body: {
-        'wallet_id': toWalletId,
-        'transaction_type': 'Deposit',
-        'amount': amount.toString(),
-      },
+      body: jsonEncode({
+        'user_id': loginController.phoneNumber.value,
+        'to_wallet_id': selectedWallet,
+        'amount': amount,
+        
+      }),
+      
     );
 
     if (response.statusCode == 200) {
@@ -184,3 +216,5 @@ Future<void> depositTransaction({
     print('Error: $error');
   }
 }
+}
+ 

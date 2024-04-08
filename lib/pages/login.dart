@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_app/config/const.dart';
+import 'package:flutter_app/controllers/logincontroller.dart';
 import 'package:flutter_app/utils/preferences.dart';
 import 'package:flutter_app/views/customButton.dart';
 import 'package:flutter_app/views/customText.dart';
@@ -10,8 +11,9 @@ import 'package:flutter_app/views/customTextField.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
-final TextEditingController emailController = TextEditingController();
+final TextEditingController phoneController = TextEditingController();
 final TextEditingController passwordController = TextEditingController();
+LoginController loginController = Get.put(LoginController());
 preferences myPref=preferences();
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -19,7 +21,7 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     myPref.getValue("username").then((value) => {
-      emailController.text=value
+      phoneController.text=value
     });
   
     return Scaffold(
@@ -70,7 +72,7 @@ class LoginScreen extends StatelessWidget {
                             children: [
                               customText(label: "Email",),
                               customTextField(
-                                userFieldController: emailController,
+                                userFieldController: phoneController,
                                 //hint: "youremail@example.com",
                                 icon: Icons.email,
                               ),
@@ -127,19 +129,22 @@ class LoginScreen extends StatelessWidget {
   }
 
   void gotoHome() {
-    myPref.setValue("email", emailController.text);
+    myPref.setValue("email", phoneController.text);
     Get.offAllNamed("/home");
   }
   
    Future<void> serverLogin() async {
     http.Response response;
     response = await http.get(Uri.parse(
-        "https://sanerylgloann.co.ke/wallet_app/read_users.php?email=$emailController.text.trim()}&password=${passwordController.text.trim()}"));
+        "https://sanerylgloann.co.ke/wallet_app/read_users.php?email=$phoneController.text.trim()}&password=${passwordController.text.trim()}"));
     if (response.statusCode == 200) {
       var serverResponse = json.decode(response.body);
       int loginStatus = serverResponse['success'];
       if (loginStatus == 1) {
-        gotoHome();
+        //gotoHome();
+        var userData=serverResponse['userdata'];
+        var phone=userData['phone'];
+        loginController.updatePhoneNumber(num);
       } else {
         print('email or password is incorrect');
       }
