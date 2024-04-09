@@ -1,101 +1,81 @@
+import 'dart:convert';
+import 'dart:convert';
+import 'dart:convert';
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/controllers/transcationcontroller.dart';
+import 'package:flutter_app/model/transaction.dart';
+import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 
-class TransactionsPage extends StatefulWidget {
-  @override
-  _TransactionsPageState createState() => _TransactionsPageState();
-}
+Transcationcontroller transcationcontroller = Get.put(Transcationcontroller());
 
-class _TransactionsPageState extends State<TransactionsPage> {
-  List<Transaction> transactions = [
-    Transaction(
-        date: DateTime.now(),
-        amount: -50.0,
-        description: 'Groceries',
-        type: TransactionType.debit),
-    Transaction(
-        date: DateTime.now().subtract(Duration(days: 2)),
-        amount: 1000.0,
-        description: 'Salary',
-        type: TransactionType.credit),
-    // Add more sample transactions here
-  ];
+class Transcation extends StatelessWidget {
+  // ignore: avoid_types_as_parameter_names
+  Transcation({key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Transactions'),
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      hintText: 'Search transactions',
-                      prefixIcon: Icon(Icons.search),
-                    ),
-                  ),
-                ),
-                IconButton(
-                  icon: Icon(Icons.filter_list),
-                  onPressed: () {
-                    // Show filter options
-                  },
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: transactions.length,
+    return FutureBuilder<void>(
+      future: getTranscations(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else {
+          return Obx(
+            () => ListView.builder(
+              itemCount: transcationcontroller.transcationList.length,
               itemBuilder: (context, index) {
-                final transaction = transactions[index];
-                return ListTile(
-                  leading: CircleAvatar(
-                    child: Text(
-                      transaction.type == TransactionType.debit ? '-' : '+',
-                      style: TextStyle(
-                        color: transaction.type == TransactionType.debit
-                            ? Colors.red
-                            : Colors.green,
-                      ),
+                return Row(
+                  children: [
+                    Icon(Icons.category),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          transcationcontroller
+                              .transcationList[index].fromWalletId,
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        Text(
+                          transcationcontroller
+                              .transcationList[index].toWalletId,
+                          style: TextStyle(fontSize: 15),
+                        ),
+                        Text(
+                          transcationcontroller.transcationList[index].amount
+                              .toString(),
+                          style: TextStyle(fontSize: 15),
+                        ),
+                      ],
                     ),
-                  ),
-                  title: Text(transaction.description),
-                  subtitle: Text(transaction.date.toString()),
-                  trailing: Text('${transaction.amount.toStringAsFixed(2)}'),
+                  ],
                 );
               },
             ),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              // Show dialog to add/edit transaction
-            },
-            child: Text('Add Transaction'),
-          ),
-        ],
-      ),
+          );
+        }
+      },
     );
   }
 }
 
-class Transaction {
-  final DateTime date;
-  final double amount;
-  final String description;
-  final TransactionType type;
-
-  Transaction({
-    required this.date,
-    required this.amount,
-    required this.description,
-    required this.type,
-  });
+Future<void> getTranscations() async {
+  try {
+    final response = await http.get(Uri.parse(
+        'https://sanerylgloann.co.ke/wallet_app/read_users.php}'));
+    if (response.statusCode == 200) {
+      final serverResponse = json.decode(response.body);
+      final transcationResponse =serverResponse['transcations'] as List<dynamic>;
+      final transcationList = transcationResponse .map((transaction) => TransactionModel.fromJson(transaction)).toList();
+      transcationcontroller.updateTranscationList(transcationList);
+    } else {
+      print('Server error: ${response.statusCode}');
+    }
+  } catch (error) {
+    print('Error: $error');
+    throw error;
+  }
 }
-
-enum TransactionType { debit, credit }

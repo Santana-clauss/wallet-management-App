@@ -141,10 +141,14 @@ class Homepage extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 25),
             child: Column(
               children: [
-                custumdetails(
-                    imageUrl: "images/transcations.png",
-                    tileTitle: "Transactions",
-                    subTileTitle: "Recent Payments"),
+                GestureDetector(onTap: (){
+                    Navigator.pushNamed(context, '/transcation');
+                  },
+                  child: custumdetails(
+                      imageUrl: "images/transcations.png",
+                      tileTitle: "Transactions",
+                      subTileTitle: "Recent Payments"),
+                ),
                 SizedBox(
                   height: 20,
                 ),

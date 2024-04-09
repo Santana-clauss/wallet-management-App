@@ -127,42 +127,12 @@ class RegisterScreen extends StatelessWidget {
                               hideText: true,
                             ),
                             SizedBox(height: 20),
-                            // ElevatedButton(onPressed: (){
-                            //   serverSignup();
-                            //   Get.toNamed("/login");
-                            //   style: ElevatedButton.styleFrom(
-                            //    backgroundColor: greenColor,
-                            //    foregroundColor: Colors.white,
-                            //    shape: RoundedRectangleBorder(
-                            //    borderRadius: BorderRadius.circular(20),)); 
-                            // }, child: Text("Signup"))
+                           
 
                             customButton(buttonLabel: "Sign up",action: (){serverSignup();
                             Get.toNamed("/login");}
                             
                             ),
-                            
-                            // ElevatedButton(
-                            //   onPressed: () {
-                            //     Navigator.push(
-                            //       context,
-                            //       MaterialPageRoute(
-                            //           builder: (BuildContext context) =>
-                            //               Homepage()),
-                            //     );
-                            //   },
-                            //   child: Text("Sign Up"),
-                            //   style: ElevatedButton.styleFrom(
-                            //     backgroundColor: Colors.green,
-                            //     shape: RoundedRectangleBorder(
-                            //       borderRadius: BorderRadius.circular(20),
-                            //     ),
-                            //     padding: const EdgeInsets.symmetric(
-                            //       horizontal: 50,
-                            //       vertical: 15,
-                            //     ),
-                            //   ),
-                            // ),
                             
                             SizedBox(height: 25),
                             Row(
@@ -200,14 +170,14 @@ class RegisterScreen extends StatelessWidget {
  Future<void> serverSignup() async {
     http.Response response;
     var body={
-      'phone': phone.text.trim(),
-      'email': email.text.trim(),
       'fname': fName.text.trim(),
-      'sname': lName.text.trim(),
-      'password':password.text.trim(),
+      'lname': lName.text.trim(),
+      'email': email.text.trim(),
+      'phone': phone.text.trim(),
+      'password': password.text.trim(),
 };
     response = await http.post(
-      Uri.parse("https://sanerylgloann.co.ke/wallet_app/create_user.php"),
+      Uri.parse("https://sanerylgloann.co.ke/wallet_app/signup.php"),
       body: body,
     );
     if (response.statusCode == 200) {

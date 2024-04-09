@@ -1,8 +1,8 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
 import 'package:flutter/material.dart';
 import 'package:flutter_app/views/customText.dart';
 import 'package:flutter_app/views/customTextField.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class TransferPage extends StatefulWidget {
   const TransferPage({Key? key}) : super(key: key);
@@ -13,6 +13,8 @@ class TransferPage extends StatefulWidget {
 
 class _TransferPageState extends State<TransferPage> {
   late TextEditingController amountController;
+  String? selectedFromWallet;
+  String? selectedToWallet;
 
   @override
   void initState() {
@@ -24,27 +26,6 @@ class _TransferPageState extends State<TransferPage> {
   void dispose() {
     amountController.dispose();
     super.dispose();
-  }
-
-  void addAmount(String number) {
-    if (amountController.text == '0') {
-      amountController.text = '';
-    }
-    setState(() {
-      amountController.text = amountController.text + number;
-    });
-  }
-
-  void deleteAmount() {
-    if (amountController.text.isNotEmpty) {
-      setState(() {
-        amountController.text = amountController.text
-            .substring(0, amountController.text.length - 1);
-        if (amountController.text.isEmpty) {
-          amountController.text = '0';
-        }
-      });
-    }
   }
 
   @override
@@ -77,25 +58,26 @@ class _TransferPageState extends State<TransferPage> {
                       ),
                       SizedBox(height: 10),
                       DropdownButtonFormField<String>(
+                        value: selectedFromWallet,
                         borderRadius: BorderRadius.circular(20),
                         items: [
-                          DropdownMenuItem<String>(
+                          DropdownMenuItem(
                             value: 'savings',
                             child: Text('Savings Account'),
                           ),
-                          DropdownMenuItem<String>(
+                          DropdownMenuItem(
                             value: 'visa',
                             child: Text('Visa Card'),
                           ),
-                          DropdownMenuItem<String>(
+                          DropdownMenuItem(
                             value: 'kcb',
                             child: Text('KCB Card'),
                           ),
-                          
-                          
                         ],
                         onChanged: (value) {
-                          // Handle wallet selection
+                          setState(() {
+                            selectedFromWallet = value;
+                          });
                         },
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.symmetric(horizontal: 15),
@@ -105,25 +87,28 @@ class _TransferPageState extends State<TransferPage> {
                         ),
                       ),
                       SizedBox(height: 20),
-                      customText(label: "Select wallet to transfer to",),
+                      customText(label: "Select wallet to transfer to"),
                       DropdownButtonFormField<String>(
+                        value: selectedToWallet,
                         borderRadius: BorderRadius.circular(20),
                         items: [
-                          DropdownMenuItem<String>(
+                          DropdownMenuItem(
                             value: 'savings',
                             child: Text('Savings Account'),
                           ),
-                          DropdownMenuItem<String>(
+                          DropdownMenuItem(
                             value: 'visa',
                             child: Text('Visa Card'),
                           ),
-                          DropdownMenuItem<String>(
+                          DropdownMenuItem(
                             value: 'kcb',
                             child: Text('KCB Card'),
                           ),
                         ],
                         onChanged: (value) {
-                          // Handle wallet selection
+                          setState(() {
+                            selectedToWallet = value;
+                          });
                         },
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.symmetric(horizontal: 15),
@@ -142,7 +127,7 @@ class _TransferPageState extends State<TransferPage> {
                       SizedBox(height: 40),
                       ElevatedButton(
                         onPressed: () {
-                          // Add logic to handle transfer
+                          transferAmount();
                         },
                         style: ElevatedButton.styleFrom(
                           primary: Colors.green,
@@ -163,44 +148,75 @@ class _TransferPageState extends State<TransferPage> {
   }
 
   Column backContainer() {
-  return Column(
-    children: [
-      Container(
-        width: double.infinity,
-        height: 240,
-        decoration: BoxDecoration(
-          color: Colors.green,
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(20),
-            bottomRight: Radius.circular(20),
+    return Column(
+      children: [
+        Container(
+          width: double.infinity,
+          height: 240,
+          decoration: BoxDecoration(
+            color: Colors.green,
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(20),
+              bottomRight: Radius.circular(20),
+            ),
+          ),
+          child: Column(
+            children: [
+              SizedBox(
+                height: 40,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.arrow_back),
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/home');
+                    },
+                  ),
+                  SizedBox(
+                    width: 80,
+                  ),
+                  Text(
+                    'Transfer ',
+                    style: TextStyle(
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
-        child: Column(
-          children: [
-            SizedBox(height: 40,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                IconButton(
-                  icon: Icon(Icons.arrow_back),
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/home');
-                  },
-                ),SizedBox(width: 80,),
-                Text(
-                  'Tranfer ',
-                  style: TextStyle(
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    ],
-  );
-}
+      ],
+    );
+  }
+
+  void transferAmount() async {
+    try {
+      final response = await http.post(
+        // Update the URL with the correct endpoint
+        Uri.parse('https://sanerylgloann.co.ke/wallet_app/transfer.php'),
+        body: jsonEncode({
+          'fromWalletId': selectedFromWallet,
+          'toWalletId': selectedToWallet,
+          'amount': double.parse(amountController.text),
+        }),
+        
+      );
+
+      if (response.statusCode == 200) {
+        print('Transfer successful');
+        // Handle success scenario
+      } else {
+        print('Failed to transfer amount: ${response.body}');
+        // Handle failure scenario
+      }
+    } catch (error) {
+      print('Error: $error');
+      // Handle exception
+    }
+  }
 }

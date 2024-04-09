@@ -1,14 +1,14 @@
 class TransactionModel {
   final int id;
-  final int walletId;
-  final String transactionType;
+  final int fromWalletId;
+  final int toWalletId;
   final double amount;
   final DateTime timestamp;
 
   TransactionModel({
     required this.id,
-    required this.walletId,
-    required this.transactionType,
+    required this.fromWalletId,
+    required this.toWalletId,
     required this.amount,
     required this.timestamp,
   });
@@ -16,9 +16,9 @@ class TransactionModel {
   factory TransactionModel.fromJson(Map<String, dynamic> json) {
     return TransactionModel(
       id: json['id'],
-      walletId: json['wallet_id'],
-      transactionType: json['transaction_type'],
-      amount: double.parse(json['amount'].toString()),
+      fromWalletId: json['from_wallet_id'],
+      toWalletId: json['to_wallet_id'],
+      amount: json['amount'].toDouble(),
       timestamp: DateTime.parse(json['timestamp']),
     );
   }
@@ -26,10 +26,10 @@ class TransactionModel {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'wallet_id': walletId,
-      'transaction_type': transactionType,
-      'amount': amount,
-      'timestamp': timestamp.toIso8601String(),
+      'from_wallet_id': fromWalletId,
+      'to_wallet_id': toWalletId,
+      'amount': amount.toString(),
+      'timestamp': timestamp.toString(),
     };
   }
 }

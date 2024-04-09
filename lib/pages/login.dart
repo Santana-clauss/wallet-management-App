@@ -70,11 +70,11 @@ class LoginScreen extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              customText(label: "Email",),
+                              customText(label: "phone",),
                               customTextField(
                                 userFieldController: phoneController,
                                 //hint: "youremail@example.com",
-                                icon: Icons.email,
+                                icon: Icons.phone,
                               ),
                               customText(label: "Password"),
                               customTextField(
@@ -129,27 +129,33 @@ class LoginScreen extends StatelessWidget {
   }
 
   void gotoHome() {
-    myPref.setValue("email", phoneController.text);
+    myPref.setValue("phone", phoneController.text);
     Get.offAllNamed("/home");
   }
   
    Future<void> serverLogin() async {
     http.Response response;
-    response = await http.get(Uri.parse(
-        "https://sanerylgloann.co.ke/wallet_app/read_users.php?email=$phoneController.text.trim()}&password=${passwordController.text.trim()}"));
-    if (response.statusCode == 200) {
-      var serverResponse = json.decode(response.body);
-      int loginStatus = serverResponse['success'];
-      if (loginStatus == 1) {
-        //gotoHome();
-        var userData=serverResponse['userdata'];
-        var phone=userData['phone'];
-        loginController.updatePhoneNumber(num);
+    try {
+      response = await http.get(Uri.parse(
+          "https://sanerylgloann.co.ke/wallet_app/read_user.php?phone=${phoneController.text.trim()}&password=${passwordController.text.trim()}}"));
+
+      if (response.statusCode == 200) {
+        var serverResponse = json.decode(response.body);
+        int loginStatus = serverResponse['success'];
+        if (loginStatus == 1) {
+          var userData = serverResponse['userdata'];
+          var phone = userData['phone'];
+          
+          loginController.updatePhoneNumber(phone);
+          Get.offAndToNamed('/home');
+        } else {
+          print('not successfull');
+        }
       } else {
-        print('email or password is incorrect');
+        print("Server error: ${response.statusCode}");
       }
-    } else {
-      print("server error&{response.statusCode}");
+    } catch (e) {
+      print("Error: $e");
     }
   }
 

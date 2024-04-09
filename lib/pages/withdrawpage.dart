@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/controllers/transcationcontroller.dart';
@@ -9,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 TextEditingController amount = TextEditingController();
-TransactionController transcationController = Get.put(TransactionController());
+TransactionController transactionController = Get.put(TransactionController());
 
 class WithdrawPage extends StatefulWidget {
   const WithdrawPage({Key? key}) : super(key: key);
@@ -92,10 +90,7 @@ class _WithdrawPageState extends State<WithdrawPage> {
                       ElevatedButton(
                         onPressed: () {
                           if (selectedWallet != null) {
-                            withdrawTransaction(
-                              fromWalletId: selectedWallet!,
-                              amount: double.parse(amount.text),
-                            );
+                            withdraw();
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
@@ -123,73 +118,95 @@ class _WithdrawPageState extends State<WithdrawPage> {
   }
 
   Column backContainer() {
-  return Column(
-    children: [
-      Container(
-        width: double.infinity,
-        height: 240,
-        decoration: BoxDecoration(
-          color: Colors.green,
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(20),
-            bottomRight: Radius.circular(20),
+    return Column(
+      children: [
+        Container(
+          width: double.infinity,
+          height: 240,
+          decoration: BoxDecoration(
+            color: Colors.green,
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(20),
+              bottomRight: Radius.circular(20),
+            ),
+          ),
+          child: Column(
+            children: [
+              SizedBox(
+                height: 40,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.arrow_back),
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/home');
+                    },
+                  ),
+                  SizedBox(
+                    width: 80,
+                  ),
+                  Text(
+                    'Withdraw ',
+                    style: TextStyle(
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
-        child: Column(
-          children: [
-            SizedBox(height: 40,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                IconButton(
-                  icon: Icon(Icons.arrow_back),
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/home');
-                  },
-                ),SizedBox(width: 80,),
-                Text(
-                  'Withdraw ',
-                  style: TextStyle(
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    ],
-  );
-}
-
-
-Future<void> withdrawTransaction({
-  required String fromWalletId,
-  required double amount,
-}) async {
-  try {
-    final response = await http.post(
-      // Update the URL with the correct endpoint
-      Uri.parse(
-          'https://sanerylgloann.co.ke/wallet_app/withdraw.php'),
-      body: jsonEncode({
-        'fromWalletId': fromWalletId,
-        'amount': amount,
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      ],
     );
-
-    if (response.statusCode == 200) {
-      print('Withdraw transaction successful');
-    } else {
-      print('Failed to perform withdraw transaction: ${response.body}');
-    }
-  } catch (error) {
-    print('Error: $error');
   }
-}
-}
+Future<void> withdraw() async {
+    try {
+      if (selectedWallet != null) {
+        var response = await http.post(
+          Uri.parse(
+              'https://sanerylgloann.co.ke/wallet_app/createTranscation.php'),
+          body: jsonEncode(<String, dynamic>{
+            //'user_id': loginController.phoneNumber.value.toString(), 
+            'from_wallet_id': selectedWallet.toString(),
+            'transaction_type': 'withdraw',
+            'amount': double.parse(amount.text),
+            
+          }),
+        );
+      
+        if (response.statusCode == 200) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('withdrawal successful'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('withdrawal  failed: ${response.body}'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Please select a wallet.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }}

@@ -1,18 +1,18 @@
-class WalletModel {
+class Wallet {
   final int walletId;
   final int userId;
   final String walletName;
   double balance;
 
-  WalletModel({
+  Wallet({
     required this.walletId,
     required this.userId,
     required this.walletName,
     required this.balance,
   });
 
-  factory WalletModel.fromJson(Map<String, dynamic> json) {
-    return WalletModel(
+  factory Wallet.fromJson(Map<String, dynamic> json) {
+    return Wallet(
       walletId: json['walletId'],
       userId: json['userId'],
       walletName: json['walletName'],
