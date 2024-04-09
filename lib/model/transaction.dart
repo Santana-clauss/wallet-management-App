@@ -1,7 +1,7 @@
 class TransactionModel {
   final int id;
-  final int fromWalletId;
-  final int toWalletId;
+  final String fromWalletId;
+  final String toWalletId;
   final double amount;
   final DateTime timestamp;
 
@@ -16,9 +16,9 @@ class TransactionModel {
   factory TransactionModel.fromJson(Map<String, dynamic> json) {
     return TransactionModel(
       id: json['id'],
-      fromWalletId: json['from_wallet_id'],
-      toWalletId: json['to_wallet_id'],
-      amount: json['amount'].toDouble(),
+      fromWalletId: json['from_wallet_id'].toString(),
+      toWalletId: json['to_wallet_id'].toString(),
+      amount: double.parse(json['amount'].toString()),
       timestamp: DateTime.parse(json['timestamp']),
     );
   }

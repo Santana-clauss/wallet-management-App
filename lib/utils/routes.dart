@@ -25,7 +25,7 @@ class Routes{
     GetPage(name: "/deposit", page: () => DepositPage()),
     GetPage(name: "/transfer", page: () => TransferPage()),
     GetPage(name: "/withdraw", page: () => WithdrawPage()),
-    GetPage(name: "/transcation", page: () => Transcation()),
+    GetPage(name: "/transcation", page: () => TranscationPage()),
     
   ];
 }

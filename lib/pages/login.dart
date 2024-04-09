@@ -1,6 +1,4 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, avoid_print
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_app/config/const.dart';
 import 'package:flutter_app/controllers/logincontroller.dart';
@@ -14,16 +12,17 @@ import 'package:http/http.dart' as http;
 final TextEditingController phoneController = TextEditingController();
 final TextEditingController passwordController = TextEditingController();
 LoginController loginController = Get.put(LoginController());
-preferences myPref=preferences();
+preferences myPref = preferences();
+
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     myPref.getValue("username").then((value) => {
-      phoneController.text=value
-    });
-  
+          phoneController.text = value,
+        });
+
     return Scaffold(
       body: Stack(
         children: [
@@ -31,29 +30,28 @@ class LoginScreen extends StatelessWidget {
             height: double.infinity,
             width: double.infinity,
             decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage("images/background.jpg"),
-                    fit: BoxFit.cover)
-               
-                ),
+              image: DecorationImage(
+                image: AssetImage("images/background.jpg"),
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
           SafeArea(
             child: Column(
               children: [
                 SizedBox(height: 20),
                 CircleAvatar(
-                    radius: 50, 
-                    backgroundColor: Colors
-                        .transparent, 
-                    child: ClipOval(
-                      child: Image.asset(
-                        'images/logow.jpg',
-                        height: 100,
-                        width: 100,
-                        fit: BoxFit.cover, 
-                      ),
+                  radius: 50,
+                  backgroundColor: Colors.transparent,
+                  child: ClipOval(
+                    child: Image.asset(
+                      'images/logow.jpg',
+                      height: 100,
+                      width: 100,
+                      fit: BoxFit.cover,
                     ),
                   ),
+                ),
                 SizedBox(height: 20),
                 SizedBox(height: 20),
                 Expanded(
@@ -70,10 +68,9 @@ class LoginScreen extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              customText(label: "phone",),
+                              customText(label: "phone"),
                               customTextField(
                                 userFieldController: phoneController,
-                                //hint: "youremail@example.com",
                                 icon: Icons.phone,
                               ),
                               customText(label: "Password"),
@@ -86,27 +83,22 @@ class LoginScreen extends StatelessWidget {
                               SizedBox(height: 20),
                               customButton(
                                 buttonLabel: "Login",
-                                action:(){serverLogin();
-                                Get.toNamed("/home");
-                                }
+                                action: () {
+                                  serverLogin();
+                                },
                               ),
-                              SizedBox(
-                                height: 25,
-                              ),
+                              SizedBox(height: 25),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   customText(label: "Don't have an account?"),
                                   GestureDetector(
-                                      child: Row(
-                                    //mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      customText(
-                                          label: "Sign up here",
-                                          labelColor: appGreenColor,
-                                          onTap: gotoRegister),
-                                    ],
-                                  )),
+                                    child: customText(
+                                      label: "Sign up here",
+                                      labelColor: appGreenColor,
+                                      onTap: gotoRegister,
+                                    ),
+                                  ),
                                 ],
                               )
                             ],
@@ -132,32 +124,56 @@ class LoginScreen extends StatelessWidget {
     myPref.setValue("phone", phoneController.text);
     Get.offAllNamed("/home");
   }
-  
-   Future<void> serverLogin() async {
-    http.Response response;
-    try {
-      response = await http.get(Uri.parse(
-          "https://sanerylgloann.co.ke/wallet_app/read_user.php?phone=${phoneController.text.trim()}&password=${passwordController.text.trim()}}"));
 
-      if (response.statusCode == 200) {
-        var serverResponse = json.decode(response.body);
-        int loginStatus = serverResponse['success'];
-        if (loginStatus == 1) {
-          var userData = serverResponse['userdata'];
+  Future<void> serverLogin() async {
+  http.Response response;
+  try {
+    response = await http.get(Uri.parse(
+        "https://sanerylgloann.co.ke/wallet_app/read_user.php?phone=${phoneController.text.trim()}&password=${passwordController.text.trim()}"));
+
+    print('Response Status Code: ${response.statusCode}');
+
+    if (response.statusCode == 200) {
+      var responseBody = response.body;
+      print('Response Body: $responseBody');
+
+      if (responseBody.isNotEmpty) {
+        var serverResponse = json.decode(responseBody);
+        print('Server Response: $serverResponse');
+        
+        bool success = serverResponse['success'];
+        if (success) {
+          var userData = serverResponse['user']; // Corrected here
           var phone = userData['phone'];
-          
           loginController.updatePhoneNumber(phone);
           Get.offAndToNamed('/home');
         } else {
-          print('not successfull');
+          // Handle unsuccessful login
+          showDialog(
+            context: Get.overlayContext!,
+            builder: (context) => AlertDialog(
+              title: Text("Login Failed"),
+              content: Text(serverResponse['message']), // Use server message
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("OK"),
+                ),
+              ],
+            ),
+          );
         }
       } else {
-        print("Server error: ${response.statusCode}");
+        // Handle empty response body
+        print("Empty response body");
       }
-    } catch (e) {
-      print("Error: $e");
+    } else {
+      print("Server error: ${response.statusCode}");
     }
+  } catch (e) {
+    print("Error: $e");
   }
-
-  
+}
 }
