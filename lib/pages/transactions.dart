@@ -17,7 +17,7 @@ class TranscationPage extends StatelessWidget {
         title: Text('Transactions'),
       ),
       body: FutureBuilder<void>(
-        future: getTranscations(),
+        future: getTransactions(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -58,25 +58,23 @@ class TranscationPage extends StatelessWidget {
       ),
     );
   }
-}
 
-Future<void> getTranscations() async {
-  try {
-    final response = await http.get(Uri.parse(
-        'https://sanerylgloann.co.ke/wallet_app/readTranscations.php'));
-    if (response.statusCode == 200) {
-      final serverResponse = json.decode(response.body);
-      final transcationResponse =
-          serverResponse['transcations'] as List<dynamic>;
-      final transcationList = transcationResponse
-          .map((transaction) => TransactionModel.fromJson(transaction))
-          .toList();
-      transcationcontroller.updateTranscationList(transcationList);
-    } else {
-      print('Server error: ${response.statusCode}');
+  Future<void> getTransactions() async {
+    try {
+      final response = await http.get(Uri.parse(
+          'https://sanerylgloann.co.ke/wallet_app/readTranscations.php'));
+      if (response.statusCode == 200) {
+        final List<dynamic> transactionResponse = json.decode(response.body);
+        final List<TransactionModel> transactionList = transactionResponse
+            .map((transaction) => TransactionModel.fromJson(transaction))
+            .toList();
+        transcationcontroller.updateTranscationList(transactionList);
+      } else {
+        print('Server error: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error: $error');
+      throw error;
     }
-  } catch (error) {
-    print('Error: $error');
-    throw error;
   }
 }

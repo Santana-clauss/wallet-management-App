@@ -146,7 +146,7 @@ class LoginScreen extends StatelessWidget {
           var userData = serverResponse['user']; // Corrected here
           var phone = userData['phone'];
           loginController.updatePhoneNumber(phone);
-          Get.offAndToNamed('/home');
+          Get.toNamed('/home');
         } else {
           // Handle unsuccessful login
           showDialog(

@@ -1,5 +1,5 @@
 class TransactionModel {
-  final int id;
+  final String id; // Change the data type to String
   final String fromWalletId;
   final String toWalletId;
   final double amount;
@@ -15,7 +15,7 @@ class TransactionModel {
 
   factory TransactionModel.fromJson(Map<String, dynamic> json) {
     return TransactionModel(
-      id: json['id'],
+      id: json['id'].toString(), // Convert the id to String
       fromWalletId: json['from_wallet_id'].toString(),
       toWalletId: json['to_wallet_id'].toString(),
       amount: double.parse(json['amount'].toString()),

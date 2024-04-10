@@ -47,10 +47,11 @@ class Homepage extends StatelessWidget {
                     color: greenColor.withOpacity(0.1),
                     shape: BoxShape.circle,
                   ),
-                  child: GestureDetector(onTap:(){
-                    Get.to(SettingsPage());
-
-                  },child: Icon(Icons.settings)),
+                  child: GestureDetector(
+                      onTap: () {
+                        Get.to(SettingsPage());
+                      },
+                      child: Icon(Icons.settings)),
                 ),
               ],
             ),
@@ -105,10 +106,9 @@ class Homepage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 GestureDetector(
-                  onTap: (){
-                    Navigator.pushNamed(context,'/transfer');
+                  onTap: () {
+                    Navigator.pushNamed(context, '/transfer');
                   },
-
                   child: MyButton(
                     iconImagePath: "images/send.png",
                     buttonText: "Transfer",
@@ -116,7 +116,7 @@ class Homepage extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-                     Navigator.pushNamed(context, '/deposit');
+                    Navigator.pushNamed(context, '/deposit');
                   },
                   child: MyButton(
                     iconImagePath: "images/deposit.png",
@@ -124,7 +124,7 @@ class Homepage extends StatelessWidget {
                   ),
                 ),
                 GestureDetector(
-                  onTap: (){
+                  onTap: () {
                     Navigator.pushNamed(context, '/withdraw');
                   },
                   child: MyButton(
@@ -132,7 +132,6 @@ class Homepage extends StatelessWidget {
                     buttonText: "Withdraw",
                   ),
                 ),
-                
               ],
             ),
           ),
@@ -141,7 +140,8 @@ class Homepage extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 25),
             child: Column(
               children: [
-                GestureDetector(onTap: (){
+                GestureDetector(
+                  onTap: () {
                     Navigator.pushNamed(context, '/transcation');
                   },
                   child: custumdetails(
@@ -165,4 +165,3 @@ class Homepage extends StatelessWidget {
     );
   }
 }
-

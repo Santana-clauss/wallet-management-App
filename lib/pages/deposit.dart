@@ -113,9 +113,9 @@ class DepositPage extends StatelessWidget {
               ),
               body: jsonEncode(<String, dynamic>{
                 'user_id': loginController.phoneNumber.value,
-                'wallet_id': getWalletID(selectedWallet!),
                 'transaction_type': 'deposit',
                 'amount': amountValue,
+                'wallet_id': getWalletID(selectedWallet!),
               }),
             );
             if (response.statusCode == 200) {
