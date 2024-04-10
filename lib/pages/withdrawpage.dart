@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 TextEditingController amount = TextEditingController();
-TransactionController transactionController = Get.put(TransactionController());
+//TransactionController transactionController = Get.put(TransactionController());
 
 class WithdrawPage extends StatefulWidget {
   const WithdrawPage({Key? key}) : super(key: key);
