@@ -2,10 +2,10 @@
 
 import 'package:get/get.dart';
 
-class LoginController extends GetxController {
-  var walletid = ''.obs;
+class WalletController extends GetxController {
+  var walletid = 0.obs;
 
-  void updatePhoneNumber(num) {
-    walletid.value = num;
+  void updateWaller(id) {
+    walletid.value = id;
   }
 }

@@ -143,17 +143,20 @@ class LoginScreen extends StatelessWidget {
         
         bool success = serverResponse['success'];
         if (success) {
-          var userData = serverResponse['user']; // Corrected here
+          var userData = serverResponse['user'];
           var phone = userData['phone'];
+          print(userData['user_id']);
+          loginController.updateUserId(userData['user_id']);
           loginController.updatePhoneNumber(phone);
+
           Get.toNamed('/home');
         } else {
-          // Handle unsuccessful login
+          
           showDialog(
             context: Get.overlayContext!,
             builder: (context) => AlertDialog(
               title: Text("Login Failed"),
-              content: Text(serverResponse['message']), // Use server message
+              content: Text(serverResponse['message']), 
               actions: [
                 TextButton(
                   onPressed: () {
@@ -166,7 +169,7 @@ class LoginScreen extends StatelessWidget {
           );
         }
       } else {
-        // Handle empty response body
+        
         print("Empty response body");
       }
     } else {

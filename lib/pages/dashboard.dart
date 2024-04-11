@@ -85,7 +85,7 @@ class HomePage extends StatelessWidget {
   final List<Widget> screens = [
     Homepage(),
     AccountsPage(),
-    ReportsPage(),
+    //ReportsPage(),
     ProfilePage(),
     
   ];
@@ -113,11 +113,11 @@ class HomePage extends StatelessWidget {
             iconColor: appBlackColor,
             text: 'Accounts',
           ),
-          GButton(
-            icon: Icons.report_sharp,
-            iconColor: appBlackColor,
-            text: 'Reports',
-          ),
+          // GButton(
+          //   icon: Icons.report_sharp,
+          //   iconColor: appBlackColor,
+          //   text: 'Reports',
+          // ),
           GButton(
             icon: Icons.person,
             iconColor: appBlackColor,

@@ -15,6 +15,7 @@ class TranscationPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Transactions'),
+        automaticallyImplyLeading: true,
       ),
       body: FutureBuilder<void>(
         future: getTransactions(),
@@ -44,7 +45,7 @@ class TranscationPage extends StatelessWidget {
                           style: TextStyle(fontSize: 15),
                         ),
                         Text(
-                          'Amount: ${transaction.amount}',
+                          'Amount: ${transaction.amount.toStringAsFixed(2)}', // Format amount to display two decimal places
                           style: TextStyle(fontSize: 15),
                         ),
                       ],
@@ -63,14 +64,24 @@ class TranscationPage extends StatelessWidget {
     try {
       final response = await http.get(Uri.parse(
           'https://sanerylgloann.co.ke/wallet_app/readTranscations.php'));
+
       if (response.statusCode == 200) {
-        final List<dynamic> transactionResponse = json.decode(response.body);
-        final List<TransactionModel> transactionList = transactionResponse
-            .map((transaction) => TransactionModel.fromJson(transaction))
-            .toList();
-        transcationcontroller.updateTranscationList(transactionList);
+        
+        if (response.body.startsWith('[')) {
+          final List<dynamic> transactionResponse = json.decode(response.body);
+          final List<TransactionModel> transactionList = transactionResponse
+              .map((transaction) => TransactionModel.fromJson(transaction))
+              .toList();
+          transcationcontroller.updateTranscationList(transactionList);
+        } else {
+       
+          print(response.body);
+          throw FormatException('HTML error response: ${response.body}');
+          
+        }
       } else {
         print('Server error: ${response.statusCode}');
+        throw Exception('Server error: ${response.statusCode}');
       }
     } catch (error) {
       print('Error: $error');

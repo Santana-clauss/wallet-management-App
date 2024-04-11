@@ -12,9 +12,12 @@ class AccountsPage extends StatefulWidget {
 class _AccountsPageState extends State<AccountsPage> {
   List<MyWallet> accounts = [
     MyWallet(
-      title: 'Savings Account',
-      balance: 5000.0,
+      title: "EQUITY CARD",
+      balance: 3000,
+      cardNumber: 048934178,
+      expiryMonth: 10,
       color: Colors.green,
+      expiryYear: 2026
     ),
     MyWallet(
       title: 'KCB Bank Card',

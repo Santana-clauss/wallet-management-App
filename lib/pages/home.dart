@@ -21,7 +21,6 @@ class Homepage extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(
         children: [
-          // Your homepage content here
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 25.0),
             child: Row(
@@ -64,10 +63,12 @@ class Homepage extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               children: [
                 MyWallet(
-                  title: "SAVINGS ACCOUNT",
-                  balance: 5000,
-                  color: Colors.green,
-                ),
+                    title: "EQUITY CARD",
+                    balance: 3000,
+                    cardNumber: 048934178,
+                    expiryMonth: 10,
+                    color: Colors.green,
+                    expiryYear: 2026),
                 MyWallet(
                   title: "VISA CARD",
                   balance: 3000,
@@ -152,10 +153,15 @@ class Homepage extends StatelessWidget {
                 SizedBox(
                   height: 20,
                 ),
-                custumdetails(
-                    imageUrl: "images/report.png",
-                    tileTitle: "Reports",
-                    subTileTitle: "View reports"),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/accounts');
+                  },
+                  child: custumdetails(
+                      imageUrl: "images/report.png",
+                      tileTitle: "Accounts",
+                      subTileTitle: "View your accounts"),
+                ),
               ],
             ),
           ),

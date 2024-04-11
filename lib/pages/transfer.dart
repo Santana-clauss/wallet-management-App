@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+
 import 'package:flutter/material.dart';
 import 'package:flutter_app/views/customText.dart';
 import 'package:flutter_app/views/customTextField.dart';
@@ -62,8 +64,8 @@ class _TransferPageState extends State<TransferPage> {
                         borderRadius: BorderRadius.circular(20),
                         items: [
                           DropdownMenuItem(
-                            value: 'savings',
-                            child: Text('Savings Account'),
+                            value: 'equity card',
+                            child: Text('Equity card'),
                           ),
                           DropdownMenuItem(
                             value: 'visa',
@@ -93,8 +95,8 @@ class _TransferPageState extends State<TransferPage> {
                         borderRadius: BorderRadius.circular(20),
                         items: [
                           DropdownMenuItem(
-                            value: 'savings',
-                            child: Text('Savings Account'),
+                            value: 'equity card',
+                            child: Text('Equity card'),
                           ),
                           DropdownMenuItem(
                             value: 'visa',
@@ -194,11 +196,10 @@ class _TransferPageState extends State<TransferPage> {
     );
   }
 
-  void transferAmount() async {
+  Future<void> transferAmount() async {
     try {
       final response = await http.post(
-        // Update the URL with the correct endpoint
-        Uri.parse('https://sanerylgloann.co.ke/wallet_app/transfer.php'),
+        Uri.parse('https://sanerylgloann.co.ke/wallet_app/createTranscation.php'),
         body: jsonEncode({
           'fromWalletId': selectedFromWallet,
           'toWalletId': selectedToWallet,
@@ -209,14 +210,14 @@ class _TransferPageState extends State<TransferPage> {
 
       if (response.statusCode == 200) {
         print('Transfer successful');
-        // Handle success scenario
+       
       } else {
         print('Failed to transfer amount: ${response.body}');
-        // Handle failure scenario
+        
       }
     } catch (error) {
       print('Error: $error');
-      // Handle exception
+      
     }
   }
 }

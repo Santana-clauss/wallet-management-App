@@ -2,20 +2,29 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_app/controllers/logincontroller.dart';
-import 'package:flutter_app/controllers/transcationcontroller.dart';
+import 'package:flutter_app/pages/login.dart';
 import 'package:flutter_app/views/customText.dart';
 import 'package:flutter_app/views/customTextField.dart';
-import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
+final Map<String, int> walletTypeToIdMap = {
+  'Equity Card': 1,
+  'Visa Card': 2,
+  'KCB Card': 3,
+};
+
 TextEditingController amount = TextEditingController();
-//TransactionController transactionController = Get.put(TransactionController());
-LoginController loginController = Get.put(LoginController());
+LoginController loginController = LoginController();
 String? selectedWallet;
 
-class DepositPage extends StatelessWidget {
+class DepositPage extends StatefulWidget {
   const DepositPage({Key? key}) : super(key: key);
 
+  @override
+  _DepositPageState createState() => _DepositPageState();
+}
+
+class _DepositPageState extends State<DepositPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,24 +56,25 @@ class DepositPage extends StatelessWidget {
                       SizedBox(height: 10),
                       DropdownButtonFormField<String>(
                         value: selectedWallet,
-                        borderRadius: BorderRadius.circular(20),
+                        onChanged: (value) {
+                          setState(() {
+                            selectedWallet = value;
+                          });
+                        },
                         items: [
                           DropdownMenuItem(
-                            value: 'savings',
-                            child: Text('Savings Account'),
+                            value: 'Equity Card',
+                            child: Text('Equity card'),
                           ),
                           DropdownMenuItem(
-                            value: 'visa',
+                            value: 'Visa Card',
                             child: Text('Visa Card'),
                           ),
                           DropdownMenuItem(
-                            value: 'kcb',
+                            value: 'KCB Card',
                             child: Text('KCB Card'),
                           ),
                         ],
-                        onChanged: (value) {
-                          selectedWallet = value;
-                        },
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.symmetric(
                             horizontal: 15,
@@ -83,7 +93,29 @@ class DepositPage extends StatelessWidget {
                       customTextField(userFieldController: amount),
                       SizedBox(height: 40),
                       ElevatedButton(
-                        onPressed: () => _deposit(context),
+                        onPressed: () {
+                          if (selectedWallet != null) {
+                            depositTransaction();
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('Error'),
+                                  content: Text('Please select a wallet.'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text('OK'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }
+                        },
                         style: ElevatedButton.styleFrom(
                           primary: Colors.green,
                         ),
@@ -98,73 +130,6 @@ class DepositPage extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  void _deposit(BuildContext context) async {
-    try {
-      if (selectedWallet != null) {
-        var amountText = amount.text.trim();
-        if (amountText.isNotEmpty) {
-          var amountValue = double.tryParse(amountText);
-          if (amountValue != null) {
-            var response = await http.post(
-              Uri.parse(
-                'https://sanerylgloann.co.ke/wallet_app/createTranscation.php',
-              ),
-              body: jsonEncode(<String, dynamic>{
-                'user_id': loginController.phoneNumber.value,
-                'transaction_type': 'deposit',
-                'amount': amountValue,
-                'wallet_id': getWalletID(selectedWallet!),
-              }),
-            );
-            if (response.statusCode == 200) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Deposit successful'),
-                  backgroundColor: Colors.green,
-                ),
-              );
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Deposit failed: ${response.body}'),
-                  backgroundColor: Colors.red,
-                ),
-              );
-            }
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Invalid amount entered'),
-                backgroundColor: Colors.red,
-              ),
-            );
-          }
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Please enter an amount.'),
-              backgroundColor: Colors.red,
-            ),
-          );
-        }
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Please select a wallet.'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
   }
 
   Column backContainer() {
@@ -191,14 +156,12 @@ class DepositPage extends StatelessWidget {
                   IconButton(
                     icon: Icon(Icons.arrow_back),
                     onPressed: () {
-                      //Navigator.pushNamed(context, '/home');
+                      Navigator.pushNamed(context, '/home');
                     },
                   ),
-                  SizedBox(
-                    width: 80,
-                  ),
+                  SizedBox(width: 120),
                   Text(
-                    'Deposit ',
+                    'Deposit',
                     style: TextStyle(
                       fontSize: 40,
                       fontWeight: FontWeight.bold,
@@ -213,17 +176,59 @@ class DepositPage extends StatelessWidget {
       ],
     );
   }
-}
 
-int getWalletID(String selectedWallet) {
-  switch (selectedWallet) {
-    case 'savings':
-      return 1;
-    case 'visa':
-      return 2;
-    case 'kcb':
-      return 3;
-    default:
-      return 0; // Return a default value or handle the case where selectedWallet is not recognized
+  Future<void> depositTransaction() async {
+    try {
+      final response = await http.post(
+        Uri.parse('https://sanerylgloann.co.ke/wallet_app/deposit.php'),
+        body: {
+          'user_id': loginController.user_id.value.toString(),
+          'wallet_id': walletTypeToIdMap[selectedWallet]!.toString(),
+          'transaction_type': "deposit",
+          'amount': amount.text.toString(),
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        if (responseData['success'] == 1 &&
+            responseData['new_balance'] != null) {
+          final walletId = walletTypeToIdMap[selectedWallet]!;
+          final newBalance = responseData['new_balance'];
+          updateWalletBalance(walletId, newBalance);
+          print('Deposit transaction successful');
+          print(response.body);
+        } else {
+          print(
+              'Failed to perform deposit transaction: ${responseData['error']}');
+        }
+      } else {
+        print(
+            'Failed to perform deposit transaction: ${response.reasonPhrase}');
+      }
+    } catch (error) {
+      print('Error: $error');
+    }
+  }
+
+
+  void updateWalletBalance(int walletId, double newBalance) async {
+    try {
+      final response = await http.post(
+        Uri.parse('https://sanerylgloann.co.ke/wallet_app/updatewallet.php'),
+        body: {
+          'wallet_id': walletId.toString(),
+          'new_balance': newBalance.toString(),
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print('Wallet balance updated successfully');
+      } else {
+        print('Failed to update wallet balance: ${response.reasonPhrase}');
+      }
+    } catch (error) {
+      print('Error updating wallet balance: $error');
+    }
   }
 }
