@@ -1,20 +1,64 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
-
 import 'package:flutter/material.dart';
 import 'package:flutter_app/config/const.dart';
 import 'package:flutter_app/controllers/controllers.dart';
+import 'package:flutter_app/controllers/logincontroller.dart';
+import 'package:flutter_app/pages/deposit.dart';
 import 'package:flutter_app/pages/settings.dart';
 import 'package:flutter_app/views/customText.dart';
 import 'package:flutter_app/views/customcard.dart';
 import 'package:flutter_app/views/customedetails.dart';
 import 'package:flutter_app/views/customtbutton.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 HomeController homeController = Get.put(HomeController());
+LoginController loginController = Get.put(LoginController());
 
-class Homepage extends StatelessWidget {
+class Homepage extends StatefulWidget {
+  @override
+  _HomepageState createState() => _HomepageState();
+}
+
+class _HomepageState extends State<Homepage> {
   final PageController _controller = PageController();
+  List<double> balances = [0, 0, 0]; // Default balances, change as needed
+
+  @override
+  void initState() {
+    super.initState();
+    fetchBalances();
+  }
+
+  Future<void> fetchBalances() async {
+    try {
+      // Get the user_id from the login controller
+      final RxInt userId = loginController.user_id;
+
+      // Construct the API endpoint URL with the user_id
+      final String apiUrl =
+          'https://sanerylgloann.co.ke/wallet_app/readwallet.php?user_id=$userId';
+
+      final response = await http.get(Uri.parse(apiUrl));
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        List<double> updatedBalances = [];
+        for (var walletData in data) {
+          double balance = double.parse(walletData['balance'].toString());
+          updatedBalances.add(balance);
+        }
+        setState(() {
+          balances = updatedBalances;
+        });
+      } else {
+        print('Failed to fetch balances: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error fetching balances: $error');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,41 +102,44 @@ class Homepage extends StatelessWidget {
           SizedBox(height: 20),
           Container(
             height: 200,
-            child: PageView(
+            child: PageView.builder(
               controller: _controller,
               scrollDirection: Axis.horizontal,
-              children: [
-                MyWallet(
-                    title: "EQUITY CARD",
-                    balance: 3000,
-                    cardNumber: 048934178,
-                    expiryMonth: 10,
-                    color: Colors.green,
-                    expiryYear: 2026),
-                MyWallet(
-                  title: "VISA CARD",
-                  balance: 3000,
-                  cardNumber: 048934178,
-                  expiryMonth: 10,
-                  color: Colors.yellow,
-                  expiryYear: 2026,
-                ),
-                MyWallet(
-                  title: "KCB CARD",
-                  balance: 4000,
-                  cardNumber: 567894321,
-                  expiryMonth: 10,
-                  color: Colors.blue,
-                  expiryYear: 2026,
-                )
-              ],
+              itemCount: balances.length,
+              itemBuilder: (context, index) {
+                switch (index) {
+                  case 0:
+                    return MyWallet(
+                      title: "Savings",
+                      balance: balances[index],
+                      color: Colors.green,
+                    );
+                  case 1:
+                    return MyWallet(
+                      title: "KCB Card",
+                      balance: balances[index],
+                      color: Colors.blue,
+                    );
+                  case 2:
+                    return MyWallet(
+                      title: "Visa Card",
+                      balance: balances[index],
+                      color: Colors.yellow,
+                    );
+                  default:
+                    return Container();
+                }
+              },
             ),
           ),
           SizedBox(height: 25),
-          SmoothPageIndicator(
-            controller: _controller,
-            count: 3,
-            effect: ExpandingDotsEffect(activeDotColor: Colors.black),
+          Container(
+            height: 16, // Adjust the height as needed
+            child: SmoothPageIndicator(
+              controller: _controller,
+              count: balances.length,
+              effect: ExpandingDotsEffect(activeDotColor: Colors.black),
+            ),
           ),
           SizedBox(height: 20),
           customText(

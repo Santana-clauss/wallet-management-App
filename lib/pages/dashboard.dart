@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/config/const.dart';
 import 'package:flutter_app/controllers/controllers.dart';
+import 'package:flutter_app/controllers/logincontroller.dart';
 import 'package:flutter_app/pages/accounts.dart';
 import 'package:flutter_app/pages/home.dart';
 import 'package:flutter_app/pages/profile.dart';
@@ -86,7 +87,8 @@ class HomePage extends StatelessWidget {
     Homepage(),
     AccountsPage(),
     //ReportsPage(),
-    ProfilePage(),
+   ProfilePage(userId: 3)
+
     
   ];
 

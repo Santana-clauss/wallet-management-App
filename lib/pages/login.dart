@@ -145,7 +145,7 @@ class LoginScreen extends StatelessWidget {
         if (success) {
           var userData = serverResponse['user'];
           var phone = userData['phone'];
-          print(userData['user_id']);
+         // print(userData['user_id']);
           loginController.updateUserId(userData['user_id']);
           loginController.updatePhoneNumber(phone);
 
