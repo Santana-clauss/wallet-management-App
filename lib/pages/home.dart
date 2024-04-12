@@ -32,25 +32,21 @@ class _HomepageState extends State<Homepage> {
     fetchBalances();
   }
 
-  Future<void> fetchBalances() async {
+Future<void> fetchBalances() async {
     try {
-      // Get the user_id from the login controller
-      final RxInt userId = loginController.user_id;
+      final response = await http.get(Uri.parse(
+          'https://sanerylgloann.co.ke/wallet_app/readwallet.php?user_id=3'));
 
-      // Construct the API endpoint URL with the user_id
-      final String apiUrl =
-          'https://sanerylgloann.co.ke/wallet_app/readwallet.php?user_id=$userId';
-
-      final response = await http.get(Uri.parse(apiUrl));
       if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
-        List<double> updatedBalances = [];
-        for (var walletData in data) {
-          double balance = double.parse(walletData['balance'].toString());
-          updatedBalances.add(balance);
-        }
+        final Map<String, dynamic> data = json.decode(response.body);
+
         setState(() {
-          balances = updatedBalances;
+          
+          balances = [
+            double.parse(data['Equity Card']),
+            double.parse(data['Visa Card']),
+            double.parse(data['KCB Card']),
+          ];
         });
       } else {
         print('Failed to fetch balances: ${response.statusCode}');
@@ -59,6 +55,7 @@ class _HomepageState extends State<Homepage> {
       print('Error fetching balances: $error');
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +121,7 @@ class _HomepageState extends State<Homepage> {
                     return MyWallet(
                       title: "Visa Card",
                       balance: balances[index],
-                      color: Colors.yellow,
+                      color: Color.fromARGB(255, 214, 185, 23),
                     );
                   default:
                     return Container();

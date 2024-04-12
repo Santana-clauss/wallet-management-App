@@ -126,57 +126,59 @@ class LoginScreen extends StatelessWidget {
   }
 
   Future<void> serverLogin() async {
-  http.Response response;
-  try {
-    response = await http.get(Uri.parse(
-        "https://sanerylgloann.co.ke/wallet_app/read_user.php?phone=${phoneController.text.trim()}&password=${passwordController.text.trim()}"));
+    http.Response response;
+    try {
+      response = await http.get(Uri.parse(
+          "https://sanerylgloann.co.ke/wallet_app/read_user.php?phone=${phoneController.text.trim()}&password=${passwordController.text.trim()}"));
 
-    print('Response Status Code: ${response.statusCode}');
+      print('Response Status Code: ${response.statusCode}');
 
-    if (response.statusCode == 200) {
-      var responseBody = response.body;
-      print('Response Body: $responseBody');
+      if (response.statusCode == 200) {
+        var responseBody = response.body;
+        print('Response Body: $responseBody');
 
-      if (responseBody.isNotEmpty) {
-        var serverResponse = json.decode(responseBody);
-        print('Server Response: $serverResponse');
-        
-        bool success = serverResponse['success'];
-        if (success) {
-          var userData = serverResponse['user'];
-          var phone = userData['phone'];
-         // print(userData['user_id']);
-          loginController.updateUserId(userData['user_id']);
-          loginController.updatePhoneNumber(phone);
+        if (responseBody.isNotEmpty) {
+          var serverResponse = json.decode(responseBody);
+          print('Server Response: $serverResponse');
 
-          Get.toNamed('/home');
+          bool success = serverResponse['success'];
+          if (success) {
+            var userData = serverResponse['user'];
+            var phone = userData['phone'];
+            var userId = userData['user_id']; // Get the user ID
+
+            // Update the user ID in the login controller
+            loginController.updateUserId(userId);
+            //loginController.updatePhoneNumber(phone);
+
+            // Call the loginSuccess function to navigate to the home page
+            //loginSuccess();
+            gotoHome();
+          } else {
+            showDialog(
+              context: Get.overlayContext!,
+              builder: (context) => AlertDialog(
+                title: Text("Login Failed"),
+                content: Text(serverResponse['message']),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text("OK"),
+                  ),
+                ],
+              ),
+            );
+          }
         } else {
-          
-          showDialog(
-            context: Get.overlayContext!,
-            builder: (context) => AlertDialog(
-              title: Text("Login Failed"),
-              content: Text(serverResponse['message']), 
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text("OK"),
-                ),
-              ],
-            ),
-          );
+          print("Empty response body");
         }
       } else {
-        
-        print("Empty response body");
+        print("Server error: ${response.statusCode}");
       }
-    } else {
-      print("Server error: ${response.statusCode}");
+    } catch (e) {
+      print("Error: $e");
     }
-  } catch (e) {
-    print("Error: $e");
   }
-}
 }
