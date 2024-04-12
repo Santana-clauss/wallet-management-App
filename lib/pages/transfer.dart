@@ -1,10 +1,8 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/views/customText.dart';
 import 'package:flutter_app/views/customTextField.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class TransferPage extends StatefulWidget {
   const TransferPage({Key? key}) : super(key: key);
@@ -17,6 +15,12 @@ class _TransferPageState extends State<TransferPage> {
   late TextEditingController amountController;
   String? selectedFromWallet;
   String? selectedToWallet;
+
+  final Map<String, int> walletTypeToIdMap = {
+    'Equity Card': 1,
+    'Visa Card': 2,
+    'KCB Card': 3,
+  };
 
   @override
   void initState() {
@@ -38,7 +42,7 @@ class _TransferPageState extends State<TransferPage> {
         child: Stack(
           alignment: AlignmentDirectional.center,
           children: [
-            backContainer(),
+            _backContainer(),
             Positioned(
               top: 120,
               child: Container(
@@ -62,20 +66,12 @@ class _TransferPageState extends State<TransferPage> {
                       DropdownButtonFormField<String>(
                         value: selectedFromWallet,
                         borderRadius: BorderRadius.circular(20),
-                        items: [
-                          DropdownMenuItem(
-                            value: 'equity card',
-                            child: Text('Equity card'),
-                          ),
-                          DropdownMenuItem(
-                            value: 'visa',
-                            child: Text('Visa Card'),
-                          ),
-                          DropdownMenuItem(
-                            value: 'kcb',
-                            child: Text('KCB Card'),
-                          ),
-                        ],
+                        items: walletTypeToIdMap.keys
+                            .map((String key) => DropdownMenuItem(
+                                  value: key,
+                                  child: Text(key),
+                                ))
+                            .toList(),
                         onChanged: (value) {
                           setState(() {
                             selectedFromWallet = value;
@@ -89,24 +85,16 @@ class _TransferPageState extends State<TransferPage> {
                         ),
                       ),
                       SizedBox(height: 20),
-                      customText(label: "Select wallet to transfer to"),
+                      customText(label: 'Select wallet to transfer to'),
                       DropdownButtonFormField<String>(
                         value: selectedToWallet,
                         borderRadius: BorderRadius.circular(20),
-                        items: [
-                          DropdownMenuItem(
-                            value: 'equity card',
-                            child: Text('Equity card'),
-                          ),
-                          DropdownMenuItem(
-                            value: 'visa',
-                            child: Text('Visa Card'),
-                          ),
-                          DropdownMenuItem(
-                            value: 'kcb',
-                            child: Text('KCB Card'),
-                          ),
-                        ],
+                        items: walletTypeToIdMap.keys
+                            .map((String key) => DropdownMenuItem(
+                                  value: key,
+                                  child: Text(key),
+                                ))
+                            .toList(),
                         onChanged: (value) {
                           setState(() {
                             selectedToWallet = value;
@@ -149,7 +137,7 @@ class _TransferPageState extends State<TransferPage> {
     );
   }
 
-  Column backContainer() {
+  Column _backContainer() {
     return Column(
       children: [
         Container(
@@ -199,25 +187,27 @@ class _TransferPageState extends State<TransferPage> {
   Future<void> transferAmount() async {
     try {
       final response = await http.post(
-        Uri.parse('https://sanerylgloann.co.ke/wallet_app/createTranscation.php'),
-        body: jsonEncode({
-          'fromWalletId': selectedFromWallet,
-          'toWalletId': selectedToWallet,
-          'amount': double.parse(amountController.text),
-        }),
-        
+        Uri.parse('https://sanerylgloann.co.ke/wallet_app/transfer.php'),
+        body: {
+          'from_wallet_id': walletTypeToIdMap[selectedFromWallet]!.toString(),
+          'to_wallet_id': walletTypeToIdMap[selectedToWallet]!.toString(),
+          'transaction_type': "transfer",
+          'amount': amountController.text,
+        },
       );
 
       if (response.statusCode == 200) {
-        print('Transfer successful');
-       
+        final responseData = json.decode(response.body);
+        if (responseData['success'] == 1) {
+          print('Transfer successful');
+        } else {
+          print('Failed to transfer amount: ${responseData['error']}');
+        }
       } else {
-        print('Failed to transfer amount: ${response.body}');
-        
+        print('Failed to transfer amount: ${response.reasonPhrase}');
       }
     } catch (error) {
       print('Error: $error');
-      
     }
   }
 }

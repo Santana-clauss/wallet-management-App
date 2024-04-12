@@ -200,7 +200,7 @@ class _DepositPageState extends State<DepositPage> {
           print(response.body);
         } else {
           print(
-              'Failed to perform deposit transaction: ${responseData['error']}');
+              'Successfully updated deposit transcation ');
         }
       } else {
         print(

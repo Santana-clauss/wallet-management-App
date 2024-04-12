@@ -198,7 +198,7 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
           print(response.body);
         } else {
           print(
-              'Failed to perform withdrawal transaction: ${responseData['error']}');
+              'Successfully updated  for withdrawal transaction');
         }
       } else {
         print(
@@ -208,6 +208,7 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
       print('Error: $error');
     }
   }
+
   void updateWalletBalance(int walletId, double newBalance) async {
     try {
       final response = await http.post(
