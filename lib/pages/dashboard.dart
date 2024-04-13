@@ -11,75 +11,6 @@ import 'package:flutter_app/pages/reports.dart';
 import 'package:get/get.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
-// class HomePage extends StatelessWidget {
-//   final List<Widget> screens = [
-//     Homepage(),
-//     AccountsPage(),
-//     ProfilePage(),
-//     ReportsPage(),
-//   ];
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       //backgroundColor: appWhiteColor,
-//       body: Obx(() => screens[homeController.selectedPage.value]),
-//       bottomNavigationBar: Container(
-//         decoration: BoxDecoration(
-//           borderRadius: BorderRadius.only(
-//             topLeft: Radius.circular(20),
-//             topRight: Radius.circular(20),
-//           ),
-//           color: Color.fromARGB(255, 88, 86, 86).withOpacity(0.15),
-//         ),
-//         child: GNav(
-//           color: const Color.fromARGB(255, 160, 150, 150),
-//           activeColor: Colors.green,
-//           gap: 8,
-//           tabBackgroundColor: Colors.green.withOpacity(0.1),
-//           tabs: [
-//             GButton(
-//               icon: Icons.home,
-//               iconColor: appBlackColor,
-//               onPressed: () {
-//                 Navigator.pushNamed(context, '/home');
-//               },
-//             ),
-//             GButton(
-//               icon: Icons.account_box,
-//               iconColor: appBlackColor,
-//               onPressed: () {
-//                 Navigator.pushNamed(context, '/accounts');
-//               },
-//             ),
-//             GButton(
-//               icon: Icons.report,
-//               iconColor: appBlackColor,
-//               onPressed: () {
-//                 Navigator.pushNamed(context, '/reports');
-//               },
-//             ),
-//             GButton(
-//               icon: Icons.person,
-//               iconColor: appBlackColor,
-//               onPressed: () {
-//                 Navigator.pushNamed(context, '/profile');
-//               },
-//             )
-//           ],
-//           selectedIndex: homeController.selectedPage.value,
-//           onTabChange: (index) {
-//             homeController.updateSelectedPage(index);
-//           },
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-
-
-
 HomeController homeController = Get.put(HomeController());
 
 class HomePage extends StatelessWidget {
@@ -87,7 +18,7 @@ class HomePage extends StatelessWidget {
     Homepage(),
     AccountsPage(),
     //ReportsPage(),
-   ProfilePage(userId: 3)
+    ProfilePage(userId: 5,)
 
     
   ];
@@ -115,11 +46,7 @@ class HomePage extends StatelessWidget {
             iconColor: appBlackColor,
             text: 'Accounts',
           ),
-          // GButton(
-          //   icon: Icons.report_sharp,
-          //   iconColor: appBlackColor,
-          //   text: 'Reports',
-          // ),
+          
           GButton(
             icon: Icons.person,
             iconColor: appBlackColor,

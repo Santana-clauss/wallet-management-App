@@ -1,17 +1,20 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/controllers/logincontroller.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
+LoginController loginController = Get.put(LoginController());
 class UpdateProfile extends StatefulWidget {
   final int userId;
-  
+
   const UpdateProfile({Key? key, required this.userId}) : super(key: key);
 
   @override
-  _ProfilePageState createState() => _ProfilePageState();
+  _UpdateProfileState createState() => _UpdateProfileState();
 }
 
-class _ProfilePageState extends State<UpdateProfile> {
+class _UpdateProfileState extends State<UpdateProfile> {
   late TextEditingController firstNameController;
   late TextEditingController lastNameController;
   late TextEditingController emailController;
@@ -20,11 +23,11 @@ class _ProfilePageState extends State<UpdateProfile> {
   @override
   void initState() {
     super.initState();
-    fetchUserDetails();
     firstNameController = TextEditingController();
     lastNameController = TextEditingController();
     emailController = TextEditingController();
     phoneController = TextEditingController();
+    fetchUserDetails();
   }
 
   @override
@@ -38,8 +41,11 @@ class _ProfilePageState extends State<UpdateProfile> {
 
   Future<void> fetchUserDetails() async {
     try {
-      final response = await http.get(Uri.parse(
-          'https://sanerylgloann.co.ke/wallet_app/profile.php?user_id=${widget.userId}'));
+      final response = await http.get(
+        Uri.parse(
+          'https://sanerylgloann.co.ke/wallet_app/profile.php?user_id=${widget.userId}',
+        ),
+      );
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -52,7 +58,8 @@ class _ProfilePageState extends State<UpdateProfile> {
         });
       } else {
         throw Exception(
-            'Failed to load user details. Status code: ${response.statusCode}');
+          'Failed to load user details. Status code: ${response.statusCode}',
+        );
       }
     } catch (e) {
       print('Error fetching user details: $e');
@@ -124,7 +131,6 @@ class _ProfilePageState extends State<UpdateProfile> {
             ElevatedButton(
               onPressed: updateUserDetails,
               child: Text('Update Profile'),
-              
             ),
           ],
         ),

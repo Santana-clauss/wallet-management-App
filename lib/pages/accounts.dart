@@ -1,8 +1,12 @@
-// ignore_for_file: prefer_const_constructors
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_app/controllers/logincontroller.dart';
 import 'package:flutter_app/views/customcard.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+
+LoginController loginController = Get.put(LoginController());
 
 class AccountsPage extends StatefulWidget {
   @override
@@ -10,35 +14,67 @@ class AccountsPage extends StatefulWidget {
 }
 
 class _AccountsPageState extends State<AccountsPage> {
-  List<MyWallet> accounts = [
-    MyWallet(
-      title: "EQUITY CARD",
-      balance: 3000,
-      cardNumber: 048934178,
-      expiryMonth: 10,
-      color: Colors.green,
-      expiryYear: 2026
-    ),
-    MyWallet(
-      title: 'KCB Bank Card',
-      balance: 3000.0,
-      cardNumber: 1234567890123456,
-      expiryMonth: 12,
-      expiryYear: 2025,
-      color: Colors.blue,
-    ),
-    MyWallet(
-      title: 'Visa Credit Card',
-      balance: 2000.0,
-      cardNumber: 9876543210987654,
-      expiryMonth: 6,
-      expiryYear: 2026,
-      color: Colors.purple,
-    ),
-  ];
+  late List<double> balances = [0, 0, 0]; // Initialize balances list
+
+  @override
+  void initState() {
+    super.initState();
+    fetchBalances();
+  }
+
+  Future<void> fetchBalances() async {
+    try {
+      final response = await http.get(Uri.parse(
+          'https://sanerylgloann.co.ke/wallet_app/readwallet.php?user_id=4'));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+
+        setState(() {
+          // Update balances list with fetched data
+          balances = [
+            double.parse(data['Equity Card']),
+            double.parse(data['Visa Card']),
+            double.parse(data['KCB Card']),
+          ];
+        });
+      } else {
+        print('Failed to fetch balances: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error fetching balances: $error');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    List<MyWallet> accounts = [
+      MyWallet(
+        title: "EQUITY CARD",
+        balance: balances[0], // Access balances using index
+        cardNumber: 048934178,
+        expiryMonth: 10,
+        color: Colors.green,
+        expiryYear: 2026,
+      ),
+      MyWallet(
+        title: 'KCB Bank Card',
+        balance: balances[1], // Access balances using index
+        cardNumber: 1234567890123456,
+        expiryMonth: 12,
+        expiryYear: 2025,
+        color: Colors.blue,
+      ),
+      MyWallet(
+        title: 'Visa Credit Card',
+        balance: balances[2], // Access balances using index
+        cardNumber: 9876543210987654,
+        expiryMonth: 6,
+        expiryYear: 2026,
+        color: Colors.purple,
+      ),
+    ];
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Accounts'),
@@ -59,7 +95,6 @@ class _AccountsPageState extends State<AccountsPage> {
                   ? Text(account.cardNumber.toString())
                   : null,
               onTap: () {
-                
                 Get.offNamed('/home');
               },
             ),

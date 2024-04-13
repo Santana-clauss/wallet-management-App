@@ -2,6 +2,7 @@
 
 import 'package:flutter_app/controllers/logincontroller.dart';
 import 'package:flutter_app/pages/accounts.dart';
+import 'package:flutter_app/pages/addwallets.dart';
 import 'package:flutter_app/pages/dashboard.dart';
 import 'package:flutter_app/pages/deposit.dart';
 import 'package:flutter_app/pages/home.dart';
@@ -15,7 +16,7 @@ import 'package:flutter_app/pages/updateprofile.dart';
 import 'package:flutter_app/pages/withdrawpage.dart';
 
 import 'package:get/get.dart';
-
+LoginController loginController=Get.put(LoginController());
 class Routes {
   static var routes = [
     GetPage(name: "/home", page: () => HomePage()),
@@ -28,12 +29,15 @@ class Routes {
     GetPage(name: "/transfer", page: () => TransferPage()),
     GetPage(name: "/withdraw", page: () => WithdrawalPage()),
     GetPage(name: "/transcation", page: () => TranscationPage()),
+    GetPage(name: "/add-wallet", page: () => AddWallets()),
     
-    GetPage(
-      name: "/profile",
-      page: () =>
-          ProfilePage(userId: Get.find<LoginController>().user_id.value),
-    ),
+    // GetPage(
+    //   name: "/profile",
+    //   page: () =>
+    //       ProfilePage(Get.find<LoginController>().user_id.value),
+    // ),
+    GetPage(name: "/profile", page: () => ProfilePage(userId:Get.find<LoginController>().user_id.value)),
+    
     GetPage(
       name: "/updateProfile",
       

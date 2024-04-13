@@ -1,10 +1,12 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_app/controllers/logincontroller.dart';
-import 'package:flutter_app/pages/login.dart';
 import 'package:flutter_app/views/customText.dart';
 import 'package:flutter_app/views/customTextField.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 final Map<String, int> walletTypeToIdMap = {
@@ -14,7 +16,7 @@ final Map<String, int> walletTypeToIdMap = {
 };
 
 TextEditingController amount = TextEditingController();
-LoginController loginController = LoginController();
+LoginController loginController = Get.put(LoginController());
 String? selectedWallet;
 
 class DepositPage extends StatefulWidget {
@@ -182,13 +184,14 @@ class _DepositPageState extends State<DepositPage> {
       final response = await http.post(
         Uri.parse('https://sanerylgloann.co.ke/wallet_app/deposit.php'),
         body: {
-          'user_id': loginController.user_id.value.toString(),
+          'user_id': loginController.user_id.toString(),
           'wallet_id': walletTypeToIdMap[selectedWallet]!.toString(),
           'transaction_type': "deposit",
           'amount': amount.text.toString(),
         },
+        
       );
-
+      
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
         if (responseData['success'] == 1 &&
@@ -196,6 +199,7 @@ class _DepositPageState extends State<DepositPage> {
           final walletId = walletTypeToIdMap[selectedWallet]!;
           final newBalance = responseData['new_balance'];
           updateWalletBalance(walletId, newBalance);
+         // print(loginController.user_id.toString());
           print('Deposit transaction successful');
           print(response.body);
         } else {

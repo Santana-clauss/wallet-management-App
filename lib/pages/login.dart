@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/config/const.dart';
@@ -145,14 +147,12 @@ class LoginScreen extends StatelessWidget {
           if (success) {
             var userData = serverResponse['user'];
             var phone = userData['phone'];
-            var userId = userData['user_id']; // Get the user ID
+            var userId = userData['user_id'];
+            print(userId); // Get the user ID
 
             // Update the user ID in the login controller
             loginController.updateUserId(userId);
             //loginController.updatePhoneNumber(phone);
-
-            // Call the loginSuccess function to navigate to the home page
-            //loginSuccess();
             gotoHome();
           } else {
             showDialog(

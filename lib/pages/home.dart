@@ -24,7 +24,9 @@ class Homepage extends StatefulWidget {
 
 class _HomepageState extends State<Homepage> {
   final PageController _controller = PageController();
-  List<double> balances = [0, 0, 0]; // Default balances, change as needed
+  List<double> balances = [0, 0, 0];
+  
+  get userId => loginController.user_id; 
 
   @override
   void initState() {
@@ -35,7 +37,7 @@ class _HomepageState extends State<Homepage> {
 Future<void> fetchBalances() async {
     try {
       final response = await http.get(Uri.parse(
-          'https://sanerylgloann.co.ke/wallet_app/readwallet.php?user_id=3'));
+          'https://sanerylgloann.co.ke/wallet_app/readwallet.php?user_id=4'));
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
@@ -107,19 +109,19 @@ Future<void> fetchBalances() async {
                 switch (index) {
                   case 0:
                     return MyWallet(
-                      title: "Savings",
+                      title: "EQUITY CARD",
                       balance: balances[index],
                       color: Colors.green,
                     );
                   case 1:
                     return MyWallet(
-                      title: "KCB Card",
+                      title: "VISA Card",
                       balance: balances[index],
                       color: Colors.blue,
                     );
                   case 2:
                     return MyWallet(
-                      title: "Visa Card",
+                      title: "KCB Card",
                       balance: balances[index],
                       color: Color.fromARGB(255, 214, 185, 23),
                     );

@@ -1,7 +1,5 @@
 // Example of storing userId globally using a provider
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
 class UserProvider extends ChangeNotifier {
   String? userId;
 
@@ -11,12 +9,4 @@ class UserProvider extends ChangeNotifier {
   }
 }
 
-// Usage in main.dart or wherever you set up your app
-// void main() {
-//   runApp(
-//     ChangeNotifierProvider(
-//       create: (context) => UserProvider(),
-      
-//     ),
-//   );
-// }
+

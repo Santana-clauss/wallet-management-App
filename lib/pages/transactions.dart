@@ -45,7 +45,7 @@ class TranscationPage extends StatelessWidget {
                           style: TextStyle(fontSize: 15),
                         ),
                         Text(
-                          'Amount: ${transaction.amount.toStringAsFixed(2)}', // Format amount to display two decimal places
+                          'Amount: ${transaction.amount.toStringAsFixed(2)}', 
                           style: TextStyle(fontSize: 15),
                         ),
                       ],

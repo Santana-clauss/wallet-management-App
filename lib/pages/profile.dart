@@ -31,8 +31,10 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> fetchUserDetails() async {
     try {
-      final response = await http.get(Uri.parse(
-          'https://sanerylgloann.co.ke/wallet_app/profile.php?user_id=${widget.userId}'));
+      final response = await http.get(
+        Uri.parse(
+            'https://sanerylgloann.co.ke/wallet_app/profile.php?user_id=${widget.userId}'),
+      );
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -45,7 +47,8 @@ class _ProfilePageState extends State<ProfilePage> {
         });
       } else {
         throw Exception(
-            'Failed to load user details. Status code: ${response.statusCode}');
+          'Failed to load user details. Status code: ${response.statusCode}',
+        );
       }
     } catch (e) {
       print('Error fetching user details: $e');
@@ -85,10 +88,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   ],
                 ),
               ),
-              // customText(label: "First Name:"),
-              // customText(label: "Last  Name:"),
-              // customText(label: "Email :"),
-              // customText(label: "Phone Number:"),
               customText(label: fname.isNotEmpty ? fname : "Loading..."),
               customText(label: lname.isNotEmpty ? lname : "Loading..."),
               customText(label: email.isNotEmpty ? email : "Loading..."),
@@ -98,7 +97,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.pushNamed(context,"/updateProfile");
+                  Navigator.pushNamed(context, "/updateProfile");
                 },
                 style: ElevatedButton.styleFrom(
                   primary: greenColor,
