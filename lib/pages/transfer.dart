@@ -200,6 +200,13 @@ class _TransferPageState extends State<TransferPage> {
         final responseData = json.decode(response.body);
         if (responseData['success'] == 1) {
           print('Transfer successful');
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Successfully transferred'),
+              duration: Duration(seconds: 2),
+              backgroundColor: Colors.green,
+            ),
+          );
         } else {
           print('Failed to transfer amount: ${responseData['error']}');
         }

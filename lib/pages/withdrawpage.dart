@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/controllers/logincontroller.dart';
@@ -197,8 +199,15 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
           print('Withdrawal transaction successful');
           print(response.body);
         } else {
-          print(
-              'Successfully updated  for withdrawal transaction');
+          print('Successfully updated  for withdrawal transaction');
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              // ignore: prefer_const_constructors
+              content: Text('Successfully withdrawn'),
+              duration: Duration(seconds: 2),
+              backgroundColor: Colors.green,
+            ),
+          );
         }
       } else {
         print(

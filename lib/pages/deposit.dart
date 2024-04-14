@@ -201,10 +201,22 @@ class _DepositPageState extends State<DepositPage> {
           updateWalletBalance(walletId, newBalance);
          // print(loginController.user_id.toString());
           print('Deposit transaction successful');
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Successfully deposited'),
+              duration: Duration(seconds: 2),
+            ),
+          );
           print(response.body);
         } else {
-          print(
-              'Successfully updated deposit transcation ');
+          print('Successfully updated deposit transcation ');
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Successfully deposited'),
+              duration: Duration(seconds: 2),
+              backgroundColor: Colors.green,
+            ),
+          );
         }
       } else {
         print(

@@ -44,7 +44,7 @@ class MyWallet extends StatelessWidget {
           ),
           SizedBox(height: 10),
           Text(
-            "Balance: \$$balance",
+            "Balance: \Kshs.$balance",
             style: TextStyle(
               fontSize: 16,
               color: Colors.white,
