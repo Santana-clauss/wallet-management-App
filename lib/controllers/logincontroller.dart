@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 class LoginController extends GetxController {
   var phoneNumber = ''.obs;
   var user_id =0.obs;
+  var fname = ''.obs;
 
   void updatePhoneNumber(num) {
     phoneNumber.value = num;
@@ -12,5 +13,8 @@ class LoginController extends GetxController {
 
   void updateUserId(id) {
     user_id.value = id;
+  }
+  void updatefname(name){
+    fname.value =name;
   }
 }

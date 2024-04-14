@@ -78,7 +78,7 @@ Future<void> fetchBalances() async {
                       labelColor: appGreyColor,
                     ),
                     customText(
-                      label: "Santana",
+                      label: loginController.fname.toString(),
                       fontSize: 24,
                     ),
                   ],
@@ -201,12 +201,12 @@ Future<void> fetchBalances() async {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/accounts');
+                    Navigator.pushNamed(context, '/transaction');
                   },
                   child: custumdetails(
                       imageUrl: "images/report.png",
-                      tileTitle: "Accounts",
-                      subTileTitle: "View your accounts"),
+                      tileTitle: "Reports",
+                      subTileTitle: "View reports"),
                 ),
               ],
             ),
