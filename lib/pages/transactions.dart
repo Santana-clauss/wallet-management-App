@@ -14,8 +14,9 @@ class TranscationPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Transactions'),
+        title: Center(child: Text('Transactions')),
         automaticallyImplyLeading: true,
+        backgroundColor: Colors.green,
       ),
       body: FutureBuilder<void>(
         future: getTransactions(),
@@ -85,7 +86,7 @@ class TranscationPage extends StatelessWidget {
       }
     } catch (error) {
       print('Error: $error');
-      throw error;
+     // throw error;
     }
   }
 }

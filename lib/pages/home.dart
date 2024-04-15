@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:flutter_app/config/const.dart';
 import 'package:flutter_app/controllers/controllers.dart';
@@ -201,7 +203,7 @@ Future<void> fetchBalances() async {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/transaction');
+                    Navigator.pushNamed(context, '/transcation');
                   },
                   child: custumdetails(
                       imageUrl: "images/report.png",

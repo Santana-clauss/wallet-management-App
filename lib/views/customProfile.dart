@@ -1,8 +1,6 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
-import 'package:flutter_app/views/customText.dart';
-
 class CustomProfile extends StatelessWidget {
   final Icon myIcon;
   final String myText;

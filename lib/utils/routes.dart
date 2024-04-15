@@ -30,12 +30,6 @@ class Routes {
     GetPage(name: "/withdraw", page: () => WithdrawalPage()),
     GetPage(name: "/transcation", page: () => TranscationPage()),
     GetPage(name: "/add-wallet", page: () => AddWallets()),
-    
-    // GetPage(
-    //   name: "/profile",
-    //   page: () =>
-    //       ProfilePage(Get.find<LoginController>().user_id.value),
-    // ),
     GetPage(name: "/profile", page: () => ProfilePage(userId:Get.find<LoginController>().user_id.value)),
     
     GetPage(

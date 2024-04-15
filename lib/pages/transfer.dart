@@ -1,9 +1,13 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/views/customText.dart';
 import 'package:flutter_app/views/customTextField.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 
+var store = GetStorage();
 class TransferPage extends StatefulWidget {
   const TransferPage({Key? key}) : super(key: key);
 
@@ -189,7 +193,7 @@ class _TransferPageState extends State<TransferPage> {
       final response = await http.post(
         Uri.parse('https://sanerylgloann.co.ke/wallet_app/transfer.php'),
         body: {
-          'from_wallet_id': walletTypeToIdMap[selectedFromWallet]!.toString(),
+          'from_wallet_id': store.read("userid").toString(),
           'to_wallet_id': walletTypeToIdMap[selectedToWallet]!.toString(),
           'transaction_type': "transfer",
           'amount': amountController.text,

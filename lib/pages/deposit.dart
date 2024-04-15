@@ -7,7 +7,10 @@ import 'package:flutter_app/controllers/logincontroller.dart';
 import 'package:flutter_app/views/customText.dart';
 import 'package:flutter_app/views/customTextField.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
+
+var store = GetStorage();
 
 final Map<String, int> walletTypeToIdMap = {
   'Equity Card': 1,
@@ -184,7 +187,7 @@ class _DepositPageState extends State<DepositPage> {
       final response = await http.post(
         Uri.parse('https://sanerylgloann.co.ke/wallet_app/deposit.php'),
         body: {
-          'user_id': loginController.user_id.toString(),
+          'user_id': store.read("userid").toString(),   //loginController.user_id.toString()
           'wallet_id': walletTypeToIdMap[selectedWallet]!.toString(),
           'transaction_type': "deposit",
           'amount': amount.text.toString(),
@@ -233,6 +236,7 @@ class _DepositPageState extends State<DepositPage> {
       final response = await http.post(
         Uri.parse('https://sanerylgloann.co.ke/wallet_app/updatewallet.php'),
         body: {
+          'user_id': store.read("userid").toString(),
           'wallet_id': walletId.toString(),
           'new_balance': newBalance.toString(),
         },

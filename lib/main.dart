@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/controllers/logincontroller.dart';
-import 'package:flutter_app/pages/addwallets.dart';
 import 'package:flutter_app/utils/routes.dart';
 
 
 
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
-void main() {
+Future<void> main () async {
    //Get.put(LoginController());
+   await GetStorage.init();
   runApp(GetMaterialApp(
     initialRoute: "/",
     debugShowCheckedModeBanner: false,

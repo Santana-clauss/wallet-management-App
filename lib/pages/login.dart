@@ -9,12 +9,14 @@ import 'package:flutter_app/views/customButton.dart';
 import 'package:flutter_app/views/customText.dart';
 import 'package:flutter_app/views/customTextField.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 
 final TextEditingController phoneController = TextEditingController();
 final TextEditingController passwordController = TextEditingController();
 LoginController loginController = Get.put(LoginController());
 preferences myPref = preferences();
+var store=GetStorage();
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -124,7 +126,7 @@ class LoginScreen extends StatelessWidget {
 
   void gotoHome() {
     myPref.setValue("phone", phoneController.text);
-    Get.offAllNamed("/home");
+    Get.toNamed("/home");
   }
 
   Future<void> serverLogin() async {
@@ -154,6 +156,7 @@ class LoginScreen extends StatelessWidget {
 
             // Update the user ID in the login controller
             loginController.updateUserId(userId);
+            store.write("userid", userId);
             loginController.updatefname(username);
             print(username);
             //loginController.updatePhoneNumber(phone);
