@@ -1,10 +1,10 @@
-// ignore_for_file: unused_local_variable
+// ignore_for_file: unused_local_variable, must_be_immutable, avoid_print
 
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/config/const.dart';
 import 'package:flutter_app/controllers/logincontroller.dart';
-import 'package:flutter_app/utils/preferences.dart';
+import 'package:flutter_app/controllers/sharepref.dart';
 import 'package:flutter_app/views/customButton.dart';
 import 'package:flutter_app/views/customText.dart';
 import 'package:flutter_app/views/customTextField.dart';
@@ -15,16 +15,20 @@ import 'package:http/http.dart' as http;
 final TextEditingController phoneController = TextEditingController();
 final TextEditingController passwordController = TextEditingController();
 LoginController loginController = Get.put(LoginController());
-preferences myPref = preferences();
+//preferences myPref = preferences();
+Prefs myPref=Prefs();
 var store=GetStorage();
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  bool isLogged = false;
+  bool isRememberMe = false;
+  //final Prefs _prefs = Prefs();
+  LoginScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    myPref.getValue("username").then((value) => {
-          phoneController.text = value,
+    myPref.getString("phone").then((value) => {
+          phoneController.text =value.toString()
         });
 
     return Scaffold(
@@ -125,7 +129,7 @@ class LoginScreen extends StatelessWidget {
   }
 
   void gotoHome() {
-    myPref.setValue("phone", phoneController.text);
+   myPref.addString("phone", phoneController.text);
     Get.toNamed("/home");
   }
 

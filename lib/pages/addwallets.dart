@@ -1,11 +1,15 @@
+// ignore_for_file: use_build_context_synchronously, avoid_print, prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:flutter_app/config/const.dart';
 import 'package:flutter_app/controllers/logincontroller.dart';
 import 'package:flutter_app/views/customText.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 
 LoginController loginController = Get.put(LoginController());
+var store = GetStorage();
 class AddWallets extends StatelessWidget {
   //final int userId; // User ID obtained upon login
 
@@ -22,7 +26,7 @@ class AddWallets extends StatelessWidget {
       body: Center(
         child: ElevatedButton(
           onPressed: () {
-            addAllWallets(context);
+            addAllWallets();
           },
           child: Text('Add Wallets and Proceed to Homepage'),
         ),
@@ -30,18 +34,18 @@ class AddWallets extends StatelessWidget {
     );
   }
 
-  Future<void> addAllWallets(BuildContext context) async {
+  Future<void> addAllWallets() async {
     try {
       final response = await http.post(
         Uri.parse('https://sanerylgloann.co.ke/wallet_app/addwallets.php'),
         body: {
-          'user_id': loginController.user_id.value.toString,
+          'user_id': store.read("userid").toString(),  
           'wallet_type': '',
         },
       );
       if (response.statusCode == 200) {
         print('All wallets added successfully');
-        Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+        Get.offAndToNamed('/login');
       } else {
         print('Failed to add wallets: ${response.reasonPhrase}');
         

@@ -182,19 +182,17 @@ class _DepositPageState extends State<DepositPage> {
     );
   }
 
-  Future<void> depositTransaction() async {
+ Future<void> depositTransaction() async {
     try {
       final response = await http.post(
         Uri.parse('https://sanerylgloann.co.ke/wallet_app/deposit.php'),
         body: {
-          'user_id': store.read("userid").toString(),   //loginController.user_id.toString()
+          'user_id': store.read("userid").toString(),
           'wallet_id': walletTypeToIdMap[selectedWallet]!.toString(),
           'transaction_type': "deposit",
           'amount': amount.text.toString(),
         },
-        
       );
-      
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
         if (responseData['success'] == 1 &&
@@ -202,7 +200,6 @@ class _DepositPageState extends State<DepositPage> {
           final walletId = walletTypeToIdMap[selectedWallet]!;
           final newBalance = responseData['new_balance'];
           updateWalletBalance(walletId, newBalance);
-         // print(loginController.user_id.toString());
           print('Deposit transaction successful');
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -212,7 +209,7 @@ class _DepositPageState extends State<DepositPage> {
           );
           print(response.body);
         } else {
-          print('Successfully updated deposit transcation ');
+          print('Successfully updated deposit transaction ');
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Successfully deposited'),
@@ -229,7 +226,6 @@ class _DepositPageState extends State<DepositPage> {
       print('Error: $error');
     }
   }
-
 
   void updateWalletBalance(int walletId, double newBalance) async {
     try {
