@@ -27,7 +27,7 @@ class _AccountsPageState extends State<AccountsPage> {
 
   Future<void> fetchBalances() async {
     try {
-       final userId = store.read("userid") ?? "default_user_id";
+      final userId = store.read("userid") ?? "default_user_id";
       final response = await http.get(Uri.parse(
           'https://sanerylgloann.co.ke/wallet_app/readwallet.php?user_id=$userId'));
 

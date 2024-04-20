@@ -1,5 +1,4 @@
-// ignore_for_file: prefer_const_constructors
-
+// Import necessary packages and libraries
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/views/customText.dart';
@@ -8,6 +7,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 
 var store = GetStorage();
+
 class TransferPage extends StatefulWidget {
   const TransferPage({Key? key}) : super(key: key);
 
@@ -46,6 +46,7 @@ class _TransferPageState extends State<TransferPage> {
         child: Stack(
           alignment: AlignmentDirectional.center,
           children: [
+            // Background container
             _backContainer(),
             Positioned(
               top: 120,
@@ -67,6 +68,7 @@ class _TransferPageState extends State<TransferPage> {
                         fontSize: 18,
                       ),
                       SizedBox(height: 10),
+                      // Dropdown for selecting 'from' wallet
                       DropdownButtonFormField<String>(
                         value: selectedFromWallet,
                         borderRadius: BorderRadius.circular(20),
@@ -90,6 +92,7 @@ class _TransferPageState extends State<TransferPage> {
                       ),
                       SizedBox(height: 20),
                       customText(label: 'Select wallet to transfer to'),
+                      // Dropdown for selecting 'to' wallet
                       DropdownButtonFormField<String>(
                         value: selectedToWallet,
                         borderRadius: BorderRadius.circular(20),
@@ -117,8 +120,10 @@ class _TransferPageState extends State<TransferPage> {
                         fontSize: 18,
                       ),
                       SizedBox(height: 20),
+                      // Text field for entering transfer amount
                       customTextField(userFieldController: amountController),
                       SizedBox(height: 40),
+                      // Button to initiate transfer
                       ElevatedButton(
                         onPressed: () {
                           transferAmount();
@@ -141,6 +146,7 @@ class _TransferPageState extends State<TransferPage> {
     );
   }
 
+  // Widget for background container
   Column _backContainer() {
     return Column(
       children: [
@@ -188,12 +194,15 @@ class _TransferPageState extends State<TransferPage> {
     );
   }
 
+  // Function to handle transfer operation
   Future<void> transferAmount() async {
     try {
+      final int userId = store.read("userid");
       final response = await http.post(
         Uri.parse('https://sanerylgloann.co.ke/wallet_app/transfer.php'),
         body: {
-          'from_wallet_id': store.read("userid").toString(),
+          'user_id': userId.toString(),
+          'from_wallet_id': walletTypeToIdMap[selectedFromWallet]!.toString(),
           'to_wallet_id': walletTypeToIdMap[selectedToWallet]!.toString(),
           'transaction_type': "transfer",
           'amount': amountController.text,
@@ -203,22 +212,78 @@ class _TransferPageState extends State<TransferPage> {
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
         if (responseData['success'] == 1) {
-          print('Transfer successful');
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Successfully transferred'),
-              duration: Duration(seconds: 2),
-              backgroundColor: Colors.green,
+          // Show success message to the user
+          showDialog(
+            context: context,
+            builder: (_) => AlertDialog(
+              title: Text('Success'),
+              content: Text('Transfer successful'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('OK'),
+                ),
+              ],
             ),
           );
         } else {
-          print('Failed to transfer amount: ${responseData['error']}');
+          // Show error message to the user
+          showDialog(
+            context: context,
+            builder: (_) => AlertDialog(
+              title: Text('Error'),
+              content:
+                  Text('Failed to transfer amount: ${responseData['error']}'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            ),
+          );
         }
       } else {
-        print('Failed to transfer amount: ${response.reasonPhrase}');
+        // Show error message to the user
+        showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+            title: Text('Error'),
+            content:
+                Text('Failed to transfer amount: ${response.reasonPhrase}'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          ),
+        );
       }
     } catch (error) {
-      print('Error: $error');
+      // Show error message to the user
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: Text('Error'),
+          content: Text('Error: $error'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
     }
   }
+
 }

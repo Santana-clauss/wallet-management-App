@@ -2,16 +2,18 @@
 
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_app/config/const.dart';
 import 'package:flutter_app/views/customProfile.dart';
 import 'package:flutter_app/views/customText.dart';
 import 'package:flutter_app/views/customedetails.dart';
 
+final store = GetStorage(); 
 class ProfilePage extends StatefulWidget {
-  final int userId;
+  
 
-  const ProfilePage({Key? key, required this.userId}) : super(key: key);
+  const ProfilePage({Key? key,}) : super(key: key);
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -31,9 +33,10 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> fetchUserDetails() async {
     try {
+      final userId = store.read("userid") ?? "default_user_id";
       final response = await http.get(
         Uri.parse(
-            'https://sanerylgloann.co.ke/wallet_app/profile.php?user_id=${widget.userId}'),
+            'https://sanerylgloann.co.ke/wallet_app/profile.php?user_id=$userId'),
       );
 
       if (response.statusCode == 200) {

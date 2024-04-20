@@ -184,7 +184,7 @@ class _DepositPageState extends State<DepositPage> {
       final int userId = store.read("userid");
       final int walletId = walletTypeToIdMap[selectedWallet]!;
       final double amountValue = double.parse(amount.text);
-     print(userId);
+      print(userId);
       final response = await http.post(
         Uri.parse('https://sanerylgloann.co.ke/wallet_app/deposit.php'),
         body: {
@@ -221,24 +221,24 @@ class _DepositPageState extends State<DepositPage> {
     }
   }
 
-
   void updateWalletBalance(int userId, int walletId, double newBalance) async {
-  try {
-    final response = await http.post(
-      Uri.parse('https://sanerylgloann.co.ke/wallet_app/updatewallet.php'),
-      body: {
-        'user_id': userId.toString(),
-        'wallet_id': walletId.toString(),
-        'new_balance': newBalance.toString(),
-      },
-    );
+    try {
+      final response = await http.post(
+        Uri.parse('https://sanerylgloann.co.ke/wallet_app/updatewallet.php'),
+        body: {
+          'user_id': userId.toString(),
+          'wallet_id': walletId.toString(),
+          'new_balance': newBalance.toString(),
+        },
+      );
 
-    if (response.statusCode == 200) {
-      print('Wallet balance updated successfully');
-    } else {
-      print('Failed to update wallet balance: ${response.reasonPhrase}');
+      if (response.statusCode == 200) {
+        print('Wallet balance updated successfully');
+      } else {
+        print('Failed to update wallet balance: ${response.reasonPhrase}');
+      }
+    } catch (error) {
+      print('Error updating wallet balance: $error');
     }
-  } catch (error) {
-    print('Error updating wallet balance: $error');
   }
-}}
+}

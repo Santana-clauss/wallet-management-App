@@ -18,7 +18,7 @@ class HomePage extends StatelessWidget {
     Homepage(),
     AccountsPage(),
     //ReportsPage(),
-    ProfilePage(userId: 6,),
+    ProfilePage(),
 
     
   ];
