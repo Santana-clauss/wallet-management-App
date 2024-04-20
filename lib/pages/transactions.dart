@@ -1,33 +1,38 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/controllers/transcationcontroller.dart';
-import 'package:flutter_app/model/transaction.dart';
+import 'package:flutter_app/model/transactionmodel.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 
-Transcationcontroller transcationcontroller = Get.put(Transcationcontroller());
+final Map<int, String> walletIdToTypeMap = {
+  1: 'Equity Card',
+  2: 'Visa Card',
+  3: 'KCB Card',
+};
+
+TranscationController transcationcontroller = Get.put(TranscationController());
 
 class TranscationPage extends StatelessWidget {
-  const TranscationPage({Key? key}) : super(key: key);
+  final store = GetStorage(); // User ID of the logged-in user
+
+  TranscationPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // Trigger the transaction fetching when the widget is built
+    getTransactions();
+
     return Scaffold(
       appBar: AppBar(
         title: Center(child: Text('Transactions')),
-        automaticallyImplyLeading: true,
         backgroundColor: Colors.green,
       ),
-      body: FutureBuilder<void>(
-        future: getTransactions(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else {
-            return Obx(
-              () => ListView.builder(
+      body: Obx(
+        () => transcationcontroller.transcationList.isEmpty
+            ? Center(child: CircularProgressIndicator())
+            : ListView.builder(
                 itemCount: transcationcontroller.transcationList.length,
                 itemBuilder: (context, index) {
                   TransactionModel transaction =
@@ -35,18 +40,18 @@ class TranscationPage extends StatelessWidget {
                   return ListTile(
                     leading: Icon(Icons.category),
                     title: Text(
-                      'From: ${transaction.fromWalletId}',
+                      'Transaction Type: ${transaction.transaction_type}',
                       style: TextStyle(fontSize: 18),
                     ),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'To: ${transaction.toWalletId}',
+                          'Wallet: ${getWalletType(transaction.wallet_id)}',
                           style: TextStyle(fontSize: 15),
                         ),
                         Text(
-                          'Amount: ${transaction.amount.toStringAsFixed(2)}', 
+                          'Amount: ${transaction.amount.toString()}',
                           style: TextStyle(fontSize: 15),
                         ),
                       ],
@@ -54,39 +59,38 @@ class TranscationPage extends StatelessWidget {
                   );
                 },
               ),
-            );
-          }
-        },
       ),
     );
   }
 
+  String getWalletType(int walletId) {
+    return walletIdToTypeMap[walletId] ?? 'Unknown';
+  }
+
   Future<void> getTransactions() async {
     try {
-      final response = await http.get(Uri.parse(
-          'https://sanerylgloann.co.ke/wallet_app/readTranscations.php'));
+      final userId = store.read("userid") ?? "default_user_id";
+      final response = await http.get(
+        Uri.parse(
+            'https://sanerylgloann.co.ke/wallet_app/readTranscations.php?user_id=$userId'),
+      );
 
       if (response.statusCode == 200) {
-        
-        if (response.body.startsWith('[')) {
-          final List<dynamic> transactionResponse = json.decode(response.body);
-          final List<TransactionModel> transactionList = transactionResponse
-              .map((transaction) => TransactionModel.fromJson(transaction))
-              .toList();
-          transcationcontroller.updateTranscationList(transactionList);
-        } else {
-       
-          print(response.body);
-          throw FormatException('HTML error response: ${response.body}');
-          
-        }
+        final dynamic jsonResponse = json.decode(response.body);
+        final List<dynamic> transactionResponse =
+            jsonResponse is List ? jsonResponse : [jsonResponse];
+
+        final List<TransactionModel> transactionList = transactionResponse
+            .map((transaction) => TransactionModel.fromJson(transaction))
+            .toList();
+        transcationcontroller.updateTranscationList(transactionList);
       } else {
         print('Server error: ${response.statusCode}');
         throw Exception('Server error: ${response.statusCode}');
       }
     } catch (error) {
       print('Error: $error');
-     // throw error;
+      // Handle error display or retry mechanism here
     }
   }
 }

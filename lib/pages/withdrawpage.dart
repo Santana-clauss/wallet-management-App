@@ -181,50 +181,52 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
 
   Future<void> withdrawTransaction() async {
     try {
+      final int userId = store.read("userid");
+      final int walletId = walletTypeToIdMap[selectedWallet]!;
+      final double amountValue = double.parse(amount.text);
+      print(userId);
       final response = await http.post(
         Uri.parse('https://sanerylgloann.co.ke/wallet_app/withdraw.php'),
         body: {
-          'user_id': store.read("userid").toString(),
-          'wallet_id': walletTypeToIdMap[selectedWallet]!.toString(),
-          'transaction_type': "withdraw",
-          'amount': amount.text.toString(),
+          'user_id': userId.toString(),
+          'wallet_id': walletId.toString(),
+          'amount': amountValue.toString(),
         },
       );
 
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
-        if (responseData['success'] == 1 &&
+        if (responseData['success'] == true &&
             responseData['new_balance'] != null) {
-          final walletId = walletTypeToIdMap[selectedWallet]!;
           final newBalance = responseData['new_balance'];
-          updateWalletBalance(walletId, newBalance);
-          print('Withdrawal transaction successful');
+          updateWalletBalance(userId, walletId, newBalance);
+          print('Withdrawn successful');
           print(response.body);
-        } else {
-          print('Successfully updated  for withdrawal transaction');
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              // ignore: prefer_const_constructors
               content: Text('Successfully withdrawn'),
               duration: Duration(seconds: 2),
               backgroundColor: Colors.green,
             ),
           );
+        } else {
+          print('Failed to perform withdraw transaction');
         }
       } else {
         print(
-            'Failed to perform withdraw transaction: ${response.reasonPhrase}');
+            'Failed to perform withdrawal transaction: ${response.reasonPhrase}');
       }
     } catch (error) {
       print('Error: $error');
     }
   }
 
-  void updateWalletBalance(int walletId, double newBalance) async {
+  void updateWalletBalance(int userId, int walletId, double newBalance) async {
     try {
       final response = await http.post(
         Uri.parse('https://sanerylgloann.co.ke/wallet_app/updatewallet.php'),
         body: {
+          'user_id': userId.toString(),
           'wallet_id': walletId.toString(),
           'new_balance': newBalance.toString(),
         },

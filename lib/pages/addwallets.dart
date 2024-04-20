@@ -28,7 +28,7 @@ class AddWallets extends StatelessWidget {
           onPressed: () {
             addAllWallets();
           },
-          child: Text('Add Wallets and Proceed to Homepage'),
+          child: Text('Add Wallets and Proceed to login'),
         ),
       ),
     );

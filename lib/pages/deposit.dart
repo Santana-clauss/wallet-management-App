@@ -1,15 +1,16 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_app/controllers/logincontroller.dart';
 import 'package:flutter_app/views/customText.dart';
 import 'package:flutter_app/views/customTextField.dart';
-import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 
+TextEditingController amount = TextEditingController();
+LoginController loginController = LoginController();
+String? selectedWallet;
 var store = GetStorage();
 
 final Map<String, int> walletTypeToIdMap = {
@@ -17,10 +18,6 @@ final Map<String, int> walletTypeToIdMap = {
   'Visa Card': 2,
   'KCB Card': 3,
 };
-
-TextEditingController amount = TextEditingController();
-LoginController loginController = Get.put(LoginController());
-String? selectedWallet;
 
 class DepositPage extends StatefulWidget {
   const DepositPage({Key? key}) : super(key: key);
@@ -182,34 +179,29 @@ class _DepositPageState extends State<DepositPage> {
     );
   }
 
- Future<void> depositTransaction() async {
+  Future<void> depositTransaction() async {
     try {
+      final int userId = store.read("userid");
+      final int walletId = walletTypeToIdMap[selectedWallet]!;
+      final double amountValue = double.parse(amount.text);
+     print(userId);
       final response = await http.post(
         Uri.parse('https://sanerylgloann.co.ke/wallet_app/deposit.php'),
         body: {
-          'user_id': store.read("userid").toString(),
-          'wallet_id': walletTypeToIdMap[selectedWallet]!.toString(),
-          'transaction_type': "deposit",
-          'amount': amount.text.toString(),
+          'user_id': userId.toString(),
+          'wallet_id': walletId.toString(),
+          'amount': amountValue.toString(),
         },
       );
+
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
-        if (responseData['success'] == 1 &&
+        if (responseData['success'] == true &&
             responseData['new_balance'] != null) {
-          final walletId = walletTypeToIdMap[selectedWallet]!;
           final newBalance = responseData['new_balance'];
-          updateWalletBalance(walletId, newBalance);
+          updateWalletBalance(userId, walletId, newBalance);
           print('Deposit transaction successful');
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Successfully deposited'),
-              duration: Duration(seconds: 2),
-            ),
-          );
           print(response.body);
-        } else {
-          print('Successfully updated deposit transaction ');
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Successfully deposited'),
@@ -217,6 +209,8 @@ class _DepositPageState extends State<DepositPage> {
               backgroundColor: Colors.green,
             ),
           );
+        } else {
+          print('Failed to perform deposit transaction');
         }
       } else {
         print(
@@ -227,24 +221,24 @@ class _DepositPageState extends State<DepositPage> {
     }
   }
 
-  void updateWalletBalance(int walletId, double newBalance) async {
-    try {
-      final response = await http.post(
-        Uri.parse('https://sanerylgloann.co.ke/wallet_app/updatewallet.php'),
-        body: {
-          'user_id': store.read("userid").toString(),
-          'wallet_id': walletId.toString(),
-          'new_balance': newBalance.toString(),
-        },
-      );
 
-      if (response.statusCode == 200) {
-        print('Wallet balance updated successfully');
-      } else {
-        print('Failed to update wallet balance: ${response.reasonPhrase}');
-      }
-    } catch (error) {
-      print('Error updating wallet balance: $error');
+  void updateWalletBalance(int userId, int walletId, double newBalance) async {
+  try {
+    final response = await http.post(
+      Uri.parse('https://sanerylgloann.co.ke/wallet_app/updatewallet.php'),
+      body: {
+        'user_id': userId.toString(),
+        'wallet_id': walletId.toString(),
+        'new_balance': newBalance.toString(),
+      },
+    );
+
+    if (response.statusCode == 200) {
+      print('Wallet balance updated successfully');
+    } else {
+      print('Failed to update wallet balance: ${response.reasonPhrase}');
     }
+  } catch (error) {
+    print('Error updating wallet balance: $error');
   }
-}
+}}
