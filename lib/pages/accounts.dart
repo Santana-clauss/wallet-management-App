@@ -2,10 +2,13 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_app/controllers/logincontroller.dart';
+import 'package:flutter_app/pages/addwallets.dart';
 import 'package:flutter_app/views/customcard.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 
+final store = GetStorage();
 LoginController loginController = Get.put(LoginController());
 
 class AccountsPage extends StatefulWidget {
@@ -24,20 +27,30 @@ class _AccountsPageState extends State<AccountsPage> {
 
   Future<void> fetchBalances() async {
     try {
+       final userId = store.read("userid") ?? "default_user_id";
       final response = await http.get(Uri.parse(
-          'https://sanerylgloann.co.ke/wallet_app/readwallet.php?user_id=4'));
+          'https://sanerylgloann.co.ke/wallet_app/readwallet.php?user_id=$userId'));
 
       if (response.statusCode == 200) {
-        final Map<String, dynamic> data = json.decode(response.body);
+        final dynamic responseData = json.decode(response.body);
 
-        setState(() {
-          // Update balances list with fetched data
-          balances = [
-            double.parse(data['Equity Card']),
-            double.parse(data['Visa Card']),
-            double.parse(data['KCB Card']),
-          ];
-        });
+        if (responseData is List) {
+          // Handle list response
+          setState(() {
+            balances = responseData
+                .map<double>((item) => double.parse(item['balance']))
+                .toList();
+          });
+        } else if (responseData is Map<String, dynamic>) {
+          // Handle map response
+          setState(() {
+            balances = [
+              double.parse(responseData['Equity Card']),
+              double.parse(responseData['Visa Card']),
+              double.parse(responseData['KCB Card']),
+            ];
+          });
+        }
       } else {
         print('Failed to fetch balances: ${response.statusCode}');
       }
@@ -45,6 +58,8 @@ class _AccountsPageState extends State<AccountsPage> {
       print('Error fetching balances: $error');
     }
   }
+
+
 
   @override
   Widget build(BuildContext context) {

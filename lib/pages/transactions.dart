@@ -26,35 +26,47 @@ class TranscationPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text('Transactions')),
+        title: Text('Transactions'),
+        centerTitle: true,
         backgroundColor: Colors.green,
       ),
       body: Obx(
         () => transcationcontroller.transcationList.isEmpty
             ? Center(child: CircularProgressIndicator())
             : ListView.builder(
-                itemCount: transcationcontroller.transcationList.length,
+                itemCount: transcationcontroller.transcationList.length > 5
+                    ? 5
+                    : transcationcontroller.transcationList.length,
                 itemBuilder: (context, index) {
+                  int reverseIndex =
+                      transcationcontroller.transcationList.length - index - 1;
                   TransactionModel transaction =
-                      transcationcontroller.transcationList[index];
-                  return ListTile(
-                    leading: Icon(Icons.category),
-                    title: Text(
-                      'Transaction Type: ${transaction.transaction_type}',
-                      style: TextStyle(fontSize: 18),
-                    ),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Wallet: ${getWalletType(transaction.wallet_id)}',
-                          style: TextStyle(fontSize: 15),
-                        ),
-                        Text(
-                          'Amount: ${transaction.amount.toString()}',
-                          style: TextStyle(fontSize: 15),
-                        ),
-                      ],
+                      transcationcontroller.transcationList[reverseIndex];
+                  return Card(
+                    elevation: 3,
+                    margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    child: ListTile(
+                      leading: Icon(Icons.category),
+                      title: Text(
+                        'Transaction Type: ${transaction.transaction_type}',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 4),
+                          Text(
+                            'Wallet: ${getWalletType(transaction.wallet_id)}',
+                            style: TextStyle(fontSize: 15),
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            'Amount: \$${transaction.amount.toStringAsFixed(2)}',
+                            style: TextStyle(fontSize: 15),
+                          ),
+                          SizedBox(height: 4),
+                        ],
+                      ),
                     ),
                   );
                 },
@@ -77,20 +89,26 @@ class TranscationPage extends StatelessWidget {
 
       if (response.statusCode == 200) {
         final dynamic jsonResponse = json.decode(response.body);
-        final List<dynamic> transactionResponse =
-            jsonResponse is List ? jsonResponse : [jsonResponse];
 
-        final List<TransactionModel> transactionList = transactionResponse
-            .map((transaction) => TransactionModel.fromJson(transaction))
-            .toList();
-        transcationcontroller.updateTranscationList(transactionList);
+        if (jsonResponse != null && jsonResponse['success'] == true) {
+          final List<dynamic> transactionResponse =
+              jsonResponse['transactions'];
+
+          final List<TransactionModel> transactionList = transactionResponse
+              .map((transactionJson) =>
+                  TransactionModel.fromJson(transactionJson))
+              .toList();
+
+          transcationcontroller.updateTranscationList(transactionList);
+        } else {
+          print('Invalid JSON format or success field is false');
+        }
       } else {
         print('Server error: ${response.statusCode}');
         throw Exception('Server error: ${response.statusCode}');
       }
     } catch (error) {
       print('Error: $error');
-      // Handle error display or retry mechanism here
     }
   }
 }

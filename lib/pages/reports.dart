@@ -1,190 +1,119 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
-import 'package:flutter_app/views/customText.dart';
+import 'package:flutter_app/controllers/transcationcontroller.dart';
+import 'package:flutter_app/model/transactionmodel.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:http/http.dart' as http;
 
-class ReportsPage extends StatefulWidget {
-  @override
-  _ReportsPageState createState() => _ReportsPageState();
-}
+final Map<int, String> walletIdToTypeMap = {
+  1: 'Equity Card',
+  2: 'Visa Card',
+  3: 'KCB Card',
+};
 
-class _ReportsPageState extends State<ReportsPage> {
-  // Sample data for total balance and transactions
-  double totalBalance = 5000.0;
-  List<Transaction> transactions = [
-    Transaction(
-      date: DateTime.now(),
-      amount: -50.0,
-      category: 'Food',
-      description: 'Groceries',
-    ),
-    Transaction(
-      date: DateTime.now().subtract(Duration(days: 2)),
-      amount: -20.0,
-      category: 'Entertainment',
-      description: 'Movie Tickets',
-    ),
-    Transaction(
-      date: DateTime.now().subtract(Duration(days: 5)),
-      amount: -100.0,
-      category: 'Bills',
-      description: 'Electricity Bill',
-    ),
-    // Add more sample transactions here
-  ];
+TranscationController transcationcontroller = Get.put(TranscationController());
 
-  // Filter options
-  DateTime? startDate;
-  DateTime? endDate;
-  String? selectedAccount;
-  String? selectedTransactionType;
+class ReportsPage extends StatelessWidget {
+  final store = GetStorage(); // User ID of the logged-in user
 
-  // Chart data
-  late List<charts.Series<Transaction, String>> _chartData;
-
-  @override
-  void initState() {
-    super.initState();
-    _generateChartData();
-  }
-
-  void _generateChartData() {
-    _chartData = [
-      charts.Series<Transaction, String>(
-        id: 'Expenses',
-        domainFn: (transaction, _) => transaction.category,
-        measureFn: (transaction, _) => transaction.amount.abs(),
-        data: transactions,
-      ),
-    ];
-  }
+  ReportsPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // Trigger the transaction fetching when the widget is built
+    getTransactions();
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Reports',style: TextStyle(fontWeight: FontWeight.w300),),
-        
+        title: Text('Reports'),
+        centerTitle: true,
+        backgroundColor: Colors.green,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Total Balance: \$${totalBalance.toStringAsFixed(2)}'),
-            SizedBox(height: 16.0),
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      hintText: 'Start Date',
-                      prefixIcon: Icon(Icons.calendar_today),
-                    ),
-                    onTap: () async {
-                      final selectedDate = await showDatePicker(
-                        context: context,
-                        initialDate: startDate ?? DateTime.now(),
-                        firstDate: DateTime(2000),
-                        lastDate: DateTime(2100),
-                      );
-                      if (selectedDate != null) {
-                        setState(() {
-                          startDate = selectedDate;
-                        });
-                      }
-                    },
-                  ),
+      body: Obx(
+        () => transcationcontroller.transcationList.isEmpty
+            ? Center(child: CircularProgressIndicator())
+            : ListView.separated(
+                itemCount: transcationcontroller.transcationList.length,
+                separatorBuilder: (BuildContext context, int index) => Divider(
+                  color: Colors.grey[300],
+                  height: 0,
+                  thickness: 1,
                 ),
-                SizedBox(width: 16.0),
-                Expanded(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      hintText: 'End Date',
-                      prefixIcon: Icon(Icons.calendar_today),
+                itemBuilder: (context, index) {
+                  TransactionModel transaction =
+                      transcationcontroller.transcationList[index];
+                  return Card(
+                    elevation: 3,
+                    margin: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    child: ListTile(
+                      leading: Icon(Icons.category),
+                      title: Text(
+                        'Transaction Type: ${transaction.transaction_type}',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 4),
+                         Text(
+                            'Wallet type: ${getWalletType(transaction.wallet_id)}',
+                            style: TextStyle(fontSize: 15),
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            'Amount: \$${transaction.amount.toStringAsFixed(2)}',
+                            style: TextStyle(fontSize: 14),
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            'Time: ${transaction.timestamp}',
+                            style: TextStyle(fontSize: 14),
+                          ),
+                        ],
+                      ),
                     ),
-                    onTap: () async {
-                      final selectedDate = await showDatePicker(
-                        context: context,
-                        initialDate: endDate ?? DateTime.now(),
-                        firstDate: DateTime(2000),
-                        lastDate: DateTime(2100),
-                      );
-                      if (selectedDate != null) {
-                        setState(() {
-                          endDate = selectedDate;
-                        });
-                      }
-                    },
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 16.0),
-            DropdownButtonFormField<String>(
-              decoration: InputDecoration(
-                labelText: 'Account',
-                prefixIcon: Icon(Icons.account_balance_wallet),
+                  );
+                },
               ),
-              value: selectedAccount,
-              onChanged: (value) {
-                setState(() {
-                  selectedAccount = value;
-                });
-              },
-              items: ['All', 'Savings', 'KCB Card', 'Visa Card']
-                  .map((account) => DropdownMenuItem(
-                        value: account,
-                        child: Text(account),
-                      ))
-                  .toList(),
-            ),
-            SizedBox(height: 16.0),
-            DropdownButtonFormField<String>(
-              decoration: InputDecoration(
-                labelText: 'Transaction Type',
-                prefixIcon: Icon(Icons.swap_vert),
-              ),
-              value: selectedTransactionType,
-              onChanged: (value) {
-                setState(() {
-                  selectedTransactionType = value;
-                });
-              },
-              items: ['Withdrawals', 'Bills', 'Transfers']
-                  .map((type) => DropdownMenuItem(
-                        value: type,
-                        child: Text(type),
-                      ))
-                  .toList(),
-            ),
-            SizedBox(height: 16.0),
-          
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                customText(label: "View all the reports"),
-                Icon(Icons.arrow_forward_ios),
-              ],
-            )
-          ],
-        ),
       ),
     );
   }
-}
 
-class Transaction {
-  final DateTime date;
-  final double amount;
-  final String category;
-  final String description;
+  String getWalletType(int walletId) {
+    return walletIdToTypeMap[walletId] ?? 'Unknown';
+  }
 
-  Transaction({
-    required this.date,
-    required this.amount,
-    required this.category,
-    required this.description,
-  });
+  Future<void> getTransactions() async {
+    try {
+      final userId = store.read("userid") ?? "default_user_id";
+      final response = await http.get(
+        Uri.parse(
+            'https://sanerylgloann.co.ke/wallet_app/readTranscations.php?user_id=$userId'),
+      );
+
+      if (response.statusCode == 200) {
+        final dynamic jsonResponse = json.decode(response.body);
+
+        if (jsonResponse != null && jsonResponse['success'] == true) {
+          final List<dynamic> transactionResponse =
+              jsonResponse['transactions'];
+
+          final List<TransactionModel> transactionList = transactionResponse
+              .map((transactionJson) =>
+                  TransactionModel.fromJson(transactionJson))
+              .toList();
+
+          transcationcontroller.updateTranscationList(transactionList);
+        } else {
+          print('Invalid JSON format or success field is false');
+        }
+      } else {
+        print('Server error: ${response.statusCode}');
+        throw Exception('Server error: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error: $error');
+    }
+  }
 }

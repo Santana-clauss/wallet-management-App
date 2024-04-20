@@ -38,8 +38,9 @@ class _HomepageState extends State<Homepage> {
 
 Future<void> fetchBalances() async {
     try {
+      final userId = store.read("userid") ?? "default_user_id";
       final response = await http.get(Uri.parse(
-          'https://sanerylgloann.co.ke/wallet_app/readwallet.php?user_id=43'));
+          'https://sanerylgloann.co.ke/wallet_app/readwallet.php?user_id=$userId'));
 
       if (response.statusCode == 200) {
         final dynamic responseData = json.decode(response.body);
@@ -212,7 +213,7 @@ Future<void> fetchBalances() async {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/transcation');
+                    Navigator.pushNamed(context, '/reports');
                   },
                   child: custumdetails(
                       imageUrl: "images/report.png",
