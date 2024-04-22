@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/controllers/logincontroller.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 
 LoginController loginController = Get.put(LoginController());
+final store = GetStorage();
 class UpdateProfile extends StatefulWidget {
   final int userId;
 
@@ -41,9 +43,10 @@ class _UpdateProfileState extends State<UpdateProfile> {
 
   Future<void> fetchUserDetails() async {
     try {
+      final userId = store.read("userid") ?? "default_user_id";
       final response = await http.get(
         Uri.parse(
-          'https://sanerylgloann.co.ke/wallet_app/profile.php?user_id=${widget.userId}',
+          'https://sanerylgloann.co.ke/wallet_app/profile.php?user_id=$userId',
         ),
       );
 

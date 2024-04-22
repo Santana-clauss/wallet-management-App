@@ -61,7 +61,7 @@ class TranscationPage extends StatelessWidget {
                           ),
                           SizedBox(height: 4),
                           Text(
-                            'Amount: \$${transaction.amount.toStringAsFixed(2)}',
+                            'Amount: \Kshs${transaction.amount.toStringAsFixed(2)}',
                             style: TextStyle(fontSize: 15),
                           ),
                           SizedBox(height: 4),

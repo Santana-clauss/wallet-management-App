@@ -105,7 +105,7 @@ class _AccountsPageState extends State<AccountsPage> {
                   : Icon(Icons.account_balance),
               title: Text(account.title),
               subtitle:
-                  Text('Balance: \$${account.balance.toStringAsFixed(2)}'),
+                  Text('Balance: \Kshs${account.balance.toStringAsFixed(2)}'),
               trailing: account.cardNumber != null
                   ? Text(account.cardNumber.toString())
                   : null,

@@ -1,4 +1,4 @@
-// ignore_for_file: unused_local_variable, must_be_immutable, avoid_print
+// ignore_for_file: unused_local_variable, must_be_immutable, avoid_print, prefer_const_constructors
 
 import 'dart:convert';
 import 'package:flutter/material.dart';

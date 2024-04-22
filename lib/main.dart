@@ -10,6 +10,6 @@ Future<void> main () async {
     initialRoute: "/",
     debugShowCheckedModeBanner: false,
     getPages: Routes.routes
-   // home: AddWallets(),
+    // home: AddWallets()
   ));
 }

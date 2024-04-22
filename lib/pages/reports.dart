@@ -33,48 +33,27 @@ class ReportsPage extends StatelessWidget {
       body: Obx(
         () => transcationcontroller.transcationList.isEmpty
             ? Center(child: CircularProgressIndicator())
-            : ListView.separated(
-                itemCount: transcationcontroller.transcationList.length,
-                separatorBuilder: (BuildContext context, int index) => Divider(
-                  color: Colors.grey[300],
-                  height: 0,
-                  thickness: 1,
+            : SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: DataTable(
+                  columns: [
+                    DataColumn(label: Text('Transaction Type')),
+                    DataColumn(label: Text('Wallet Type')),
+                    DataColumn(label: Text('Amount')),
+                    DataColumn(label: Text('Timestamp')),
+                  ],
+                  rows: transcationcontroller.transcationList
+                      .map(
+                        (transaction) => DataRow(cells: [
+                          DataCell(Text(transaction.transaction_type)),
+                          DataCell(Text(getWalletType(transaction.wallet_id))),
+                          DataCell(Text(
+                              '\$${transaction.amount.toStringAsFixed(2)}')),
+                          DataCell(Text(transaction.timestamp)),
+                        ]),
+                      )
+                      .toList(),
                 ),
-                itemBuilder: (context, index) {
-                  TransactionModel transaction =
-                      transcationcontroller.transcationList[index];
-                  return Card(
-                    elevation: 3,
-                    margin: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    child: ListTile(
-                      leading: Icon(Icons.category),
-                      title: Text(
-                        'Transaction Type: ${transaction.transaction_type}',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(height: 4),
-                         Text(
-                            'Wallet type: ${getWalletType(transaction.wallet_id)}',
-                            style: TextStyle(fontSize: 15),
-                          ),
-                          SizedBox(height: 4),
-                          Text(
-                            'Amount: \$${transaction.amount.toStringAsFixed(2)}',
-                            style: TextStyle(fontSize: 14),
-                          ),
-                          SizedBox(height: 4),
-                          Text(
-                            'Time: ${transaction.timestamp}',
-                            style: TextStyle(fontSize: 14),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
               ),
       ),
     );

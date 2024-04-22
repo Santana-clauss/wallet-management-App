@@ -210,7 +210,21 @@ class _DepositPageState extends State<DepositPage> {
             ),
           );
         } else {
-          print('Failed to perform deposit transaction');
+          showDialog(
+            context: context,
+            builder: (_) => AlertDialog(
+              title: Text('Success'),
+              content: Text('Deposit successful '),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            ),
+          );
         }
       } else {
         print(

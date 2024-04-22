@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors
 
 import 'package:flutter/material.dart';
 import 'package:flutter_app/config/const.dart';
@@ -27,8 +27,8 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> {
   final PageController _controller = PageController();
   List<double> balances = [0, 0, 0];
-  
-  get userId => loginController.user_id; 
+
+  get userId => loginController.user_id;
 
   @override
   void initState() {
@@ -36,7 +36,7 @@ class _HomepageState extends State<Homepage> {
     fetchBalances();
   }
 
-Future<void> fetchBalances() async {
+  Future<void> fetchBalances() async {
     try {
       final userId = store.read("userid") ?? "default_user_id";
       final response = await http.get(Uri.parse(
@@ -70,7 +70,6 @@ Future<void> fetchBalances() async {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -85,14 +84,14 @@ Future<void> fetchBalances() async {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     customText(
-                      label: "Hello,",
+                      label: "Hello ${loginController.fname.toString()} ",
                       fontSize: 14,
                       labelColor: appGreyColor,
                     ),
-                    customText(
-                      label: loginController.fname.toString(),
-                      fontSize: 24,
-                    ),
+                    // customText(
+                    //   label: loginController.fname.toString(),
+                    //   fontSize: 24,
+                    // ),
                   ],
                 ),
                 Container(
@@ -123,18 +122,21 @@ Future<void> fetchBalances() async {
                     return MyWallet(
                       title: "EQUITY CARD",
                       balance: balances[index],
+                      cardNumber: 048934178,
                       color: Colors.green,
                     );
                   case 1:
                     return MyWallet(
                       title: "VISA Card",
                       balance: balances[index],
+                      cardNumber: 1234567890123456,
                       color: Colors.blue,
                     );
                   case 2:
                     return MyWallet(
                       title: "KCB Card",
                       balance: balances[index],
+                      cardNumber: 9876543210987654,
                       color: Color.fromARGB(255, 214, 185, 23),
                     );
                   default:
