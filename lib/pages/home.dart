@@ -36,40 +36,6 @@ class _HomepageState extends State<Homepage> {
     fetchBalances();
   }
 
-  Future<void> fetchBalances() async {
-    try {
-      final userId = store.read("userid") ?? "default_user_id";
-      final response = await http.get(Uri.parse(
-          'https://sanerylgloann.co.ke/wallet_app/readwallet.php?user_id=$userId'));
-
-      if (response.statusCode == 200) {
-        final dynamic responseData = json.decode(response.body);
-
-        if (responseData is List) {
-          // Handle list response
-          setState(() {
-            balances = responseData
-                .map<double>((item) => double.parse(item['balance']))
-                .toList();
-          });
-        } else if (responseData is Map<String, dynamic>) {
-          // Handle map response
-          setState(() {
-            balances = [
-              double.parse(responseData['Equity Card']),
-              double.parse(responseData['Visa Card']),
-              double.parse(responseData['KCB Card']),
-            ];
-          });
-        }
-      } else {
-        print('Failed to fetch balances: ${response.statusCode}');
-      }
-    } catch (error) {
-      print('Error fetching balances: $error');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -123,6 +89,8 @@ class _HomepageState extends State<Homepage> {
                       title: "EQUITY CARD",
                       balance: balances[index],
                       cardNumber: 048934178,
+                      expiryMonth: 4,
+                      expiryYear: 24,
                       color: Colors.green,
                     );
                   case 1:
@@ -130,6 +98,8 @@ class _HomepageState extends State<Homepage> {
                       title: "VISA Card",
                       balance: balances[index],
                       cardNumber: 1234567890123456,
+                      expiryMonth: 10,
+                      expiryYear: 25,
                       color: Colors.blue,
                     );
                   case 2:
@@ -137,6 +107,8 @@ class _HomepageState extends State<Homepage> {
                       title: "KCB Card",
                       balance: balances[index],
                       cardNumber: 9876543210987654,
+                      expiryMonth: 5,
+                      expiryYear: 26,
                       color: Color.fromARGB(255, 214, 185, 23),
                     );
                   default:
@@ -229,5 +201,38 @@ class _HomepageState extends State<Homepage> {
         ],
       ),
     );
+  }
+   Future<void> fetchBalances() async {
+    try {
+      final userId = store.read("userid") ?? "default_user_id";
+      final response = await http.get(Uri.parse(
+          'https://sanerylgloann.co.ke/wallet_app/readwallet.php?user_id=$userId'));
+
+      if (response.statusCode == 200) {
+        final dynamic responseData = json.decode(response.body);
+
+        if (responseData is List) {
+          // Handle list response
+          setState(() {
+            balances = responseData
+                .map<double>((item) => double.parse(item['balance']))
+                .toList();
+          });
+        } else if (responseData is Map<String, dynamic>) {
+          // Handle map response
+          setState(() {
+            balances = [
+              double.parse(responseData['Equity Card']),
+              double.parse(responseData['Visa Card']),
+              double.parse(responseData['KCB Card']),
+            ];
+          });
+        }
+      } else {
+        print('Failed to fetch balances: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error fetching balances: $error');
+    }
   }
 }

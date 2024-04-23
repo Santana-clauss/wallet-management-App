@@ -202,13 +202,27 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
           updateWalletBalance(userId, walletId, newBalance);
           print('Withdrawn successful');
           print(response.body);
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Successfully withdrawn'),
-              duration: Duration(seconds: 2),
-              backgroundColor: Colors.green,
-            ),
-          );
+          // ScaffoldMessenger.of(context).showSnackBar(
+          //   SnackBar(
+          //     content: Text('Successfully withdrawn'),
+          //     duration: Duration(seconds: 2),
+          //     backgroundColor: Colors.green,
+          //   ),
+          // );
+          showDialog(
+            context: context,
+            builder: (_) => AlertDialog(
+              title: Text('Success'),
+              content: Text('Withdrawn successful '),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            ));
         } else {
           print('Failed to perform withdraw transaction');
         }

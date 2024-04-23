@@ -227,8 +227,8 @@ class _DepositPageState extends State<DepositPage> {
           );
         }
       } else {
-        print(
-            'Failed to perform deposit transaction: ${response.reasonPhrase}');
+        //print(
+        //    'Failed to perform deposit transaction: ${response.reasonPhrase}');
       }
     } catch (error) {
       print('Error: $error');

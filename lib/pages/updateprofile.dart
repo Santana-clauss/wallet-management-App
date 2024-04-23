@@ -1,5 +1,8 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/config/const.dart';
 import 'package:flutter_app/controllers/logincontroller.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -132,8 +135,14 @@ class _UpdateProfileState extends State<UpdateProfile> {
               controller: phoneController,
               decoration: InputDecoration(labelText: 'Phone'),
             ),
-            SizedBox(height: 16),
+            SizedBox(height: 20),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: greenColor,
+                elevation: 10,
+                padding: const EdgeInsets.all(20),
+                shadowColor: primaryColor,
+              ),
               onPressed: updateUserDetails,
               child: Text('Update Profile'),
             ),

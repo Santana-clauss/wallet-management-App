@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_app/config/const.dart';
 import 'package:flutter_app/controllers/logincontroller.dart';
 import 'package:flutter_app/pages/addwallets.dart';
 import 'package:flutter_app/views/customcard.dart';
@@ -92,7 +93,8 @@ class _AccountsPageState extends State<AccountsPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Accounts'),
+        title: Center(child: Text('Accounts')),
+        backgroundColor: greenColor,
       ),
       body: ListView.builder(
         itemCount: accounts.length,
