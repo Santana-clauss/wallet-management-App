@@ -48,7 +48,7 @@ class ReportsPage extends StatelessWidget {
                           DataCell(Text(transaction.transaction_type)),
                           DataCell(Text(getWalletType(transaction.wallet_id))),
                           DataCell(Text(
-                              '\$${transaction.amount.toStringAsFixed(2)}')),
+                              '\Kshs${transaction.amount.toStringAsFixed(2)}')),
                           DataCell(Text(transaction.timestamp)),
                         ]),
                       )
