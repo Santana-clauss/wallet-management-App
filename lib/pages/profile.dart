@@ -172,6 +172,19 @@ class _ProfilePageState extends State<ProfilePage> {
                       myIcon: Icon(Icons.account_balance_rounded),
                       myText: "About",
                     ),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, "/login");
+                      },
+                      style: ElevatedButton.styleFrom(
+                        primary: greenColor,
+                        onPrimary: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                      child: Text("Logout"),
+                    )
                   ],
                 ),
               ),

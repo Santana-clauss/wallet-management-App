@@ -109,6 +109,7 @@ class _DepositPageState extends State<DepositPage> {
                                     TextButton(
                                       onPressed: () {
                                         Navigator.of(context).pop();
+                                        // Navigator.pushNamed(context, "/home");
                                       },
                                       child: Text('OK'),
                                     ),

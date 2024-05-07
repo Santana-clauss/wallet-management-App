@@ -14,12 +14,16 @@ class MyButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+     //final screenWidth = MediaQuery.of(context).size.width;
+
     return Column(
       children: [
         Column(
           children: [
             Container(
                 height: 90,
+                //width: ,
+                //width: screenWidth,
                 padding: EdgeInsets.all(20),
                 decoration: BoxDecoration(
                     color: Colors.white,
