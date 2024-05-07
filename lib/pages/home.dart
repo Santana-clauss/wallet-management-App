@@ -140,48 +140,40 @@ class _HomepageState extends State<Homepage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(context, '/transfer');
-                    },
-                    child: MyButton(
-                      iconImagePath: "images/send.png",
-                      buttonText: "Transfer",
-                    ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/transfer');
+                  },
+                  child: MyButton(
+                    iconImagePath: "images/send.png",
+                    buttonText: "Transfer",
                   ),
                 ),
-                Expanded(
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(context, '/deposit');
-                    },
-                    child: MyButton(
-                      iconImagePath: "images/deposit.png",
-                      buttonText: "Deposit",
-                    ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/deposit');
+                  },
+                  child: MyButton(
+                    iconImagePath: "images/deposit.png",
+                    buttonText: "Deposit",
                   ),
                 ),
-                Expanded(
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(context, '/withdraw');
-                    },
-                    child: MyButton(
-                      iconImagePath: "images/withdraw.png",
-                      buttonText: "Withdraw",
-                    ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/withdraw');
+                  },
+                  child: MyButton(
+                    iconImagePath: "images/withdraw.png",
+                    buttonText: "Withdraw",
                   ),
                 ),
-                Expanded(
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(context, '/send');
-                    },
-                    child: MyButton(
-                      iconImagePath: "images/transfer.png",
-                      buttonText: "Send",
-                    ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/send');
+                  },
+                  child: MyButton(
+                    iconImagePath: "images/transfer.png",
+                    buttonText: "Send",
                   ),
                 ),
               ],
